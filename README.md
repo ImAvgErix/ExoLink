@@ -4,13 +4,13 @@
 
 Native **desktop chat** for servers, DMs, and voice. Rust core, Tauri shell, React UI. Talks to a Postgres-backed server you can run yourself. Local cache and MLS state stay on the device — pure AMOLED black with a mint accent.
 
-[![Release](https://img.shields.io/github/v/release/ImAvgErix/exocord?style=flat-square&color=111)](https://github.com/ImAvgErix/exocord/releases/latest)
+[![Release](https://img.shields.io/github/v/release/ImAvgErix/exocord?style=flat-square&color=111)](https://github.com/ImAvgErix/Exocord/releases/latest)
 [![License](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue?style=flat-square)](Cargo.toml)
-[![Platform](https://img.shields.io/badge/Windows%20x64-alpha-0078d4?style=flat-square)](https://github.com/ImAvgErix/exocord/releases/latest)
-[![Stack](https://img.shields.io/badge/Rust%20%7C%20Tauri%20%7C%20React-3ecf8e?style=flat-square)](https://github.com/ImAvgErix/exocord)
+[![Platform](https://img.shields.io/badge/Windows%20x64-alpha-0078d4?style=flat-square)](https://github.com/ImAvgErix/Exocord/releases/latest)
+[![Stack](https://img.shields.io/badge/Rust%20%7C%20Tauri%20%7C%20React-3ecf8e?style=flat-square)](https://github.com/ImAvgErix/Exocord)
 
 <p align="center">
-  <a href="https://github.com/ImAvgErix/exocord/releases/latest"><strong>Download Exocord</strong></a>
+  <a href="https://github.com/ImAvgErix/Exocord/releases/latest"><strong>Download Exocord</strong></a>
   &nbsp;·&nbsp;
   <a href="docs/windows-alpha.md">Docs</a>
   &nbsp;·&nbsp;
@@ -56,7 +56,7 @@ Expect breaking changes until public beta. Installers are unsigned; SmartScreen 
 
 **Needs:** Windows 10/11 x64 · WebView2 (installed when missing)
 
-1. Download the **NSIS setup** from [Releases](https://github.com/ImAvgErix/exocord/releases/latest)  
+1. Download the **NSIS setup** from [Releases](https://github.com/ImAvgErix/Exocord/releases/latest)  
 2. Install per-user (no admin required) · launch from Start  
 3. Alpha builds may embed an API URL; generic builds ask once for the HTTPS server  
 
@@ -82,8 +82,8 @@ Client (Tauri + React)  ↔  Rust host  ↔  API / gateway  ↔  Postgres + Live
 | --- | --- |
 | **[Exo](https://github.com/ImAvgErix/Exo)** | Per-module gaming optimizers |
 | **[Exo OS](https://github.com/ImAvgErix/ExoOS)** | Full Windows transform — Balanced or Extreme |
-| **[Exocord](https://github.com/ImAvgErix/exocord)** | Desktop chat & voice (this repo) |
-| **[Exo Launcher](https://github.com/ImAvgErix/Exo-Launcher)** | One library UI; store clients as invisible backends |
+| **[Exocord](https://github.com/ImAvgErix/Exocord)** | Desktop chat & voice (this repo) |
+| **[Exo Launcher](https://github.com/ImAvgErix/ExoLauncher)** | One library UI; store clients as invisible backends |
 
 ---
 
@@ -92,3 +92,4 @@ Client (Tauri + React)  ↔  Rust host  ↔  API / gateway  ↔  Postgres + Live
 AGPL-3.0-or-later — see package manifests. © 2026 Erix ([ImAvgErix](https://github.com/ImAvgErix))
 
 <p align="center"><sub>Built quiet. Tuned sharp.</sub></p>
+
