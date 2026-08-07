@@ -1,17 +1,17 @@
-# Exocord
+# Exo Link
 
 **Presence without weight.**
 
-Exocord is **native desktop chat** for servers, DMs, and voice — built for people who want speed and privacy without a browser tab farm. AMOLED dark. Calm chrome.
+Exo Link is **native desktop chat** for servers, DMs, and voice — speed and privacy without a browser tab farm. AMOLED dark. Calm chrome.
 
-[![Download](https://img.shields.io/github/v/release/ImAvgErix/Exocord?style=flat-square&label=download&color=111)](https://github.com/ImAvgErix/Exocord/releases/latest)
-[![License](https://img.shields.io/github/license/ImAvgErix/Exocord?style=flat-square)](LICENSE)
+[![Download](https://img.shields.io/github/v/release/ImAvgErix/ExoLink?style=flat-square&label=download&color=111)](https://github.com/ImAvgErix/ExoLink/releases/latest)
+[![License](https://img.shields.io/github/license/ImAvgErix/ExoLink?style=flat-square)](LICENSE)
 
 <p align="center">
-  <a href="https://github.com/ImAvgErix/Exocord/releases/latest"><strong>Download Exocord</strong></a>
+  <a href="https://github.com/ImAvgErix/ExoLink/releases/latest"><strong>Download Exo Link</strong></a>
 </p>
 <p align="center">
-  <img src="docs/media/chat.png" alt="Exocord" width="720" />
+  <img src="docs/media/chat.png" alt="Exo Link" width="720" />
 </p>
 
 ## What it does for you
@@ -24,12 +24,12 @@ Exocord is **native desktop chat** for servers, DMs, and voice — built for peo
 | **Yours to host** | Point at a server you run — or join one you trust |
 
 <p align="center">
-  <img src="docs/media/voice.png" alt="Exocord voice" width="720" />
+  <img src="docs/media/voice.png" alt="Exo Link voice" width="720" />
 </p>
 
 ## How you use it
 
-1. Download **Exocord.exe** from [Releases](https://github.com/ImAvgErix/Exocord/releases/latest)  
+1. Download **ExoLink.exe** from [Releases](https://github.com/ImAvgErix/ExoLink/releases/latest)  
 2. Run the Windows installer → open from Start  
 3. Sign in or connect to your server  
 

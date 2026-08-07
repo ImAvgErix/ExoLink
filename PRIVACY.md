@@ -1,6 +1,6 @@
-# Exocord privacy statement
+# Exo Link privacy statement
 
-**Exocord does not sell ads or ship third-party analytics by default.**
+**Exo Link does not sell ads or ship third-party analytics by default.**
 
 - **Local:** message cache, MLS state, and settings stay on the device (SQLCipher where enabled).
 - **Server:** when you connect to an API, account and message data live on that server under its operator policy.

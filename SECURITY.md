@@ -1,8 +1,8 @@
-# Exocord security model
+# Exo Link security model
 
 ## Trust boundary
 
-Exocord is a desktop client plus optional self-hosted server. Treat the client like any chat app that holds session tokens and local cache.
+Exo Link is a desktop client plus optional self-hosted server. Treat the client like any chat app that holds session tokens and local cache.
 
 ## Reporting
 
