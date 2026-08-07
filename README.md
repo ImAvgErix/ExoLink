@@ -39,6 +39,18 @@ Windows 10/11 x64. Alpha builds may ask for an API URL once.
 
 See [PRIVACY.md](PRIVACY.md).
 
+
+## Family
+
+| Product | Role |
+| --- | --- |
+| **[Exo](https://github.com/ImAvgErix/Exo)** | Gaming optimizers |
+| **[Exo OS](https://github.com/ImAvgErix/ExoOS)** | Windows gaming transform |
+| **[Exo Link](https://github.com/ImAvgErix/ExoLink)** | Desktop chat & voice (this repo) |
+| **[Exo Launcher](https://github.com/ImAvgErix/ExoLauncher)** | Game library |
+| **[Exo Hub](https://github.com/ImAvgErix/ExoHub)** | Home base for the stack |
+
+---
 ## License
 
 MIT © 2026 Erix ([ImAvgErix](https://github.com/ImAvgErix))
