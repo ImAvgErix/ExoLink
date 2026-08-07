@@ -4,15 +4,19 @@
 
 Native **desktop chat** for servers, DMs, and voice. Rust core, Tauri shell, React UI. Talks to a Postgres-backed server you can run yourself. Local cache and MLS state stay on the device — pure AMOLED black with a mint accent.
 
-[![Release](https://img.shields.io/github/v/release/ImAvgErix/exocord?style=flat-square&color=111)](https://github.com/ImAvgErix/Exocord/releases/latest)
-[![License](https://img.shields.io/badge/license-AGPL--3.0--or--later-blue?style=flat-square)](Cargo.toml)
+[![Release](https://img.shields.io/github/v/release/ImAvgErix/Exocord?style=flat-square&color=111)](https://github.com/ImAvgErix/Exocord/releases/latest)
+[![License](https://img.shields.io/github/license/ImAvgErix/Exocord?style=flat-square)](LICENSE)
 [![Platform](https://img.shields.io/badge/Windows%20x64-alpha-0078d4?style=flat-square)](https://github.com/ImAvgErix/Exocord/releases/latest)
 [![Stack](https://img.shields.io/badge/Rust%20%7C%20Tauri%20%7C%20React-3ecf8e?style=flat-square)](https://github.com/ImAvgErix/Exocord)
 
 <p align="center">
   <a href="https://github.com/ImAvgErix/Exocord/releases/latest"><strong>Download Exocord</strong></a>
   &nbsp;·&nbsp;
+  <a href="CHANGELOG.md">Changelog</a>
+  &nbsp;·&nbsp;
   <a href="docs/windows-alpha.md">Docs</a>
+  &nbsp;·&nbsp;
+  <a href="PRIVACY.md">Privacy</a>
   &nbsp;·&nbsp;
   <a href="https://www.buymeacoffee.com/UhhErix">Support</a>
 </p>
@@ -48,7 +52,7 @@ A **Windows-native** client for people who want chat and voice without a browser
 
 **Windows alpha.** Working slice: auth, servers, messaging, voice grants, encryption paths, desktop shell.
 
-Expect breaking changes until public beta. Installers are unsigned; SmartScreen may warn. Use official GitHub releases and checksums only.
+Expect breaking changes until public beta. Builds are unsigned; SmartScreen may warn. Use official GitHub releases only.
 
 ---
 
@@ -56,8 +60,8 @@ Expect breaking changes until public beta. Installers are unsigned; SmartScreen 
 
 **Needs:** Windows 10/11 x64 · WebView2 (installed when missing)
 
-1. Download the **NSIS setup** from [Releases](https://github.com/ImAvgErix/Exocord/releases/latest)  
-2. Install per-user (no admin required) · launch from Start  
+1. Download **`Exocord.exe`** from [Releases](https://github.com/ImAvgErix/Exocord/releases/latest)  
+2. Run the installer — it installs under your user profile, adds a Start menu entry, and launches Exocord  
 3. Alpha builds may embed an API URL; generic builds ask once for the HTTPS server  
 
 ```powershell
@@ -87,9 +91,8 @@ Client (Tauri + React)  ↔  Rust host  ↔  API / gateway  ↔  Postgres + Live
 
 ---
 
-## License
+## License & privacy
 
-AGPL-3.0-or-later — see package manifests. © 2026 Erix ([ImAvgErix](https://github.com/ImAvgErix))
+MIT © 2026 Erix ([ImAvgErix](https://github.com/ImAvgErix)) — [LICENSE](LICENSE) · [PRIVACY.md](PRIVACY.md) · [SECURITY.md](SECURITY.md)
 
 <p align="center"><sub>Built quiet. Tuned sharp.</sub></p>
-
