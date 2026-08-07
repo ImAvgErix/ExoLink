@@ -1,0 +1,25 @@
+[
+  {
+    "AllowedOrigins": [
+      "http://tauri.localhost"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "HEAD",
+      "PUT"
+    ],
+    "AllowedHeaders": [
+      "content-type",
+      "if-none-match",
+      "range"
+    ],
+    "ExposeHeaders": [
+      "accept-ranges",
+      "content-length",
+      "content-range",
+      "content-type",
+      "etag"
+    ],
+    "MaxAgeSeconds": 3600
+  }
+]

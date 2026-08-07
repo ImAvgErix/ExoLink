@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Exocord",
+  "version": "0.1.13",
+  "identifier": "app.exocord.desktop",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "security": {
+      "csp": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; script-src 'self'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; media-src 'self' blob: https: http://127.0.0.1:* http://localhost:*; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* http://localhost:* https://api-193-122-221-77.sslip.io ws://127.0.0.1:7880 wss://voice-129-153-173-234.sslip.io"
+    },
+    "windows": [
+      {
+        "title": "Exocord",
+        "width": 1400,
+        "height": 860,
+        "minWidth": 780,
+        "minHeight": 560,
+        "center": true,
+        "decorations": false,
+        "resizable": true,
+        "transparent": false,
+        "backgroundColor": "#000000"
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "Exocord",
+    "homepage": "https://exocord.app",
+    "category": "SocialNetworking",
+    "shortDescription": "Fast, private communities, messages, and voice.",
+    "longDescription": "Exocord is a fast, privacy-first communication client for communities, direct messages, and encrypted voice.",
+    "useLocalToolsDir": true,
+    "resources": {
+      "../../../target/release/WebView2Loader.dll": "WebView2Loader.dll"
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "allowDowngrades": false,
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": true
+      },
+      "nsis": {
+        "installMode": "currentUser",
+        "compression": "lzma",
+        "template": "windows/installer.nsi",
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico",
+        "languages": ["English"]
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+packages:
+  - ca-certificates
+  - curl
+  - fail2ban
+  - expect
+  - git
+  - gnupg
+  - jq
+  - rsync
+  - ufw
+  - unzip
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/60-exocord.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      PermitRootLogin no
+      X11Forwarding no
+  - path: /etc/sysctl.d/60-exocord.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      net.ipv4.tcp_syncookies = 1
+      net.ipv4.conf.all.rp_filter = 1
+      net.ipv4.conf.default.rp_filter = 1
+      net.ipv4.conf.all.accept_redirects = 0
+      net.ipv4.conf.default.accept_redirects = 0
+      net.ipv6.conf.all.accept_redirects = 0
+      net.ipv6.conf.default.accept_redirects = 0
+      kernel.kptr_restrict = 2
+
+runcmd:
+  - [mkdir, -p, /etc/apt/keyrings]
+  - [bash, -lc, "curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc"]
+  - [chmod, "0644", /etc/apt/keyrings/docker.asc]
+  - [bash, -lc, '. /etc/os-release && printf "deb [arch=%s signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu %s stable\n" "$(dpkg --print-architecture)" "$VERSION_CODENAME" > /etc/apt/sources.list.d/docker.list']
+  - [apt-get, update]
+  - [apt-get, install, -y, docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin]
+  - [systemctl, enable, --now, docker]
+  - [usermod, -aG, docker, ubuntu]
+  - [mkdir, -p, /opt/exocord]
+  - [chown, "ubuntu:ubuntu", /opt/exocord]
+  - [bash, -lc, "test -e /swapfile || (fallocate -l 4G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile && printf '/swapfile none swap sw 0 0\\n' >> /etc/fstab)"]
+  - [sysctl, --system]
+  - [bash, -lc, "if test -f /etc/iptables/rules.v4; then sed -i '/^-A INPUT -j REJECT --reject-with icmp-host-prohibited$/d' /etc/iptables/rules.v4; fi; while iptables -C INPUT -j REJECT --reject-with icmp-host-prohibited 2>/dev/null; do iptables -D INPUT -j REJECT --reject-with icmp-host-prohibited; done"]
+  - [ufw, default, deny, incoming]
+  - [ufw, default, allow, outgoing]
+  - [ufw, allow, OpenSSH]
+  - [ufw, allow, 80/tcp]
+  - [ufw, allow, 443/tcp]
+  - [ufw, --force, enable]
+  - [systemctl, restart, ssh]
+  - [systemctl, enable, --now, fail2ban]
+  - [bash, -lc, "docker version >/var/lib/exocord-bootstrap-ready && docker compose version >>/var/lib/exocord-bootstrap-ready"]
+
+final_message: "Exocord API host bootstrap completed after $UPTIME seconds"

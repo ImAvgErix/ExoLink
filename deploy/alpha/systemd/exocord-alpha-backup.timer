@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the Exocord alpha backup every day
+
+[Timer]
+OnCalendar=*-*-* 03:17:00 UTC
+RandomizedDelaySec=30m
+Persistent=true
+Unit=exocord-alpha-backup.service
+
+[Install]
+WantedBy=timers.target

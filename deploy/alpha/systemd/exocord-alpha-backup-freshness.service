@@ -1,0 +1,27 @@
+[Unit]
+Description=Verify Exocord alpha backup freshness and checksums
+ConditionPathIsDirectory=/var/backups/exocord-alpha
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/bin/bash /opt/exocord/deploy/alpha/scripts/verify-backup-freshness.sh /var/backups/exocord-alpha 129600
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

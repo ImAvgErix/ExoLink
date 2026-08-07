@@ -1,0 +1,48 @@
+{
+	email {$ACME_EMAIL}
+	admin off
+}
+
+{$EXOCORD_DOMAIN} {
+	encode zstd gzip
+
+	handle /downloads/latest.json {
+		root * /srv/downloads
+		rewrite * /latest.json
+		file_server
+		header Cache-Control "no-store"
+	}
+
+	handle_path /downloads/* {
+		root * /srv/downloads
+		file_server
+		header Cache-Control "public, max-age=3600, immutable"
+	}
+
+	handle {
+		reverse_proxy api:4100 {
+			header_up -CF-Connecting-IP
+			header_up -X-Exocord-Client-IP
+			header_up X-Exocord-Proxy-Client-IP {remote_host}
+		}
+	}
+
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	}
+
+	log {
+		output stdout
+		format filter {
+			request>uri delete
+			request>remote_ip hash
+			request>client_ip hash
+			request>headers>User-Agent delete
+			request>headers>X-Forwarded-For delete
+			wrap json
+		}
+	}
+}

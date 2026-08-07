@@ -1,0 +1,33 @@
+[package]
+name = "jsonwebtoken"
+version = "10.4.0"
+authors = ["Vincent Prouillet <hello@vincentprouillet.com>"]
+edition = "2024"
+rust-version = "1.88.0"
+license = "MIT"
+description = "Create and decode JWTs in a strongly typed way."
+homepage = "https://github.com/Keats/jsonwebtoken"
+repository = "https://github.com/Keats/jsonwebtoken"
+readme = "README.md"
+keywords = ["jwt", "api", "token", "jwk"]
+
+[workspace]
+
+[features]
+aws_lc_rs = ["dep:aws-lc-rs"]
+default = ["use_pem"]
+use_pem = ["dep:pem", "dep:simple_asn1"]
+
+[lib]
+name = "jsonwebtoken"
+path = "src/lib.rs"
+
+[dependencies]
+aws-lc-rs = { version = "1.15.0", optional = true }
+base64 = "0.22"
+pem = { version = "3", optional = true }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0"
+signature = { version = "2.2.0", features = ["std"] }
+simple_asn1 = { version = "0.6", optional = true }
+zeroize = { version = "1.8.2", features = ["derive"] }

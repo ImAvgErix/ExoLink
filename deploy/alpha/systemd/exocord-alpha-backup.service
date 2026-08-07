@@ -1,0 +1,36 @@
+[Unit]
+Description=Create and verify an Exocord alpha backup
+Requires=docker.service
+After=docker.service
+ConditionPathExists=/opt/exocord/deploy/alpha/.env
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/exocord/deploy/alpha
+ExecStart=/usr/bin/bash /opt/exocord/deploy/alpha/scripts/backup-alpha.sh /var/backups/exocord-alpha
+UMask=0077
+Environment=HOME=/run/exocord-alpha-backup
+Environment=DOCKER_CONFIG=/run/exocord-alpha-backup/docker
+RuntimeDirectory=exocord-alpha-backup
+RuntimeDirectoryMode=0700
+ReadWritePaths=/var/backups/exocord-alpha
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectSystem=strict
+RestrictAddressFamilies=AF_UNIX
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

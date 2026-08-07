@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exocord voice integration check</title>
+    <style>
+      :root {
+        color: #f5f7fb;
+        background: #0b0d12;
+        font: 15px/1.5 Inter, ui-sans-serif, system-ui, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at 16% 0%, #282149 0, transparent 35%),
+          radial-gradient(circle at 92% 100%, #173935 0, transparent 38%),
+          #0b0d12;
+      }
+
+      main {
+        width: min(720px, calc(100vw - 48px));
+        padding: 32px;
+        border: 1px solid #ffffff18;
+        border-radius: 24px;
+        background: #11141bdd;
+        box-shadow: 0 30px 80px #0008;
+        backdrop-filter: blur(20px);
+      }
+
+      h1 {
+        margin: 0 0 6px;
+        font-size: 24px;
+      }
+
+      p {
+        margin: 0;
+        color: #9da7b8;
+      }
+
+      #summary {
+        margin: 24px 0;
+        padding: 16px 18px;
+        border-radius: 14px;
+        background: #ffffff0a;
+        color: #dfe5ee;
+      }
+
+      #summary[data-state="passed"] {
+        color: #9ce8d0;
+        background: #4dd6ae17;
+      }
+
+      #summary[data-state="failed"] {
+        color: #ffaca9;
+        background: #ff6f6817;
+      }
+
+      ol {
+        margin: 0;
+        padding-left: 24px;
+      }
+
+      li {
+        padding: 6px 0;
+        color: #aeb8c8;
+      }
+
+      li[data-state="passed"] {
+        color: #c8f8e9;
+      }
+
+      li[data-state="failed"] {
+        color: #ffc1be;
+      }
+
+      code {
+        color: #c9bfff;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Voice integration check</h1>
+      <p>Two Exocord members, one real self-hosted SFU, synthetic media.</p>
+      <div id="summary" role="status" data-testid="voice-qa-summary">
+        Starting…
+      </div>
+      <ol id="steps" aria-label="Verification steps"></ol>
+    </main>
+    <script type="module" src="./voice-e2e.js"></script>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "exocord",
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "build": "pnpm --filter @exocord/desktop build",
+    "dev": "pnpm --filter @exocord/desktop dev",
+    "test": "pnpm --filter @exocord/desktop test",
+    "typecheck": "pnpm --filter @exocord/desktop typecheck",
+    "tauri": "pnpm --filter @exocord/desktop tauri"
+  }
+}

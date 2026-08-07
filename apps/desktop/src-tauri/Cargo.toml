@@ -1,0 +1,47 @@
+[package]
+name = "exocord-desktop"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[lib]
+name = "exocord_desktop_lib"
+# Exocord currently targets desktop only. The staticlib/cdylib outputs from
+# Tauri's mobile template overflow MinGW's auto-export table and are not used
+# by the Windows executable.
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+chrono.workspace = true
+base64.workspace = true
+exo-client = { path = "../../../crates/exo-client" }
+exo-crypto = { path = "../../../crates/exo-crypto" }
+exo-domain = { path = "../../../crates/exo-domain" }
+exo-id = { path = "../../../crates/exo-id" }
+futures-util.workspace = true
+getrandom.workspace = true
+hex.workspace = true
+keyring.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-notification = "2.3.3"
+tauri-plugin-opener = "2.5"
+tauri-plugin-single-instance = "2.4.3"
+tokio.workspace = true
+tracing.workspace = true
+url.workspace = true
+uuid.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+tempfile = "3.20"
+
+[lints]
+workspace = true

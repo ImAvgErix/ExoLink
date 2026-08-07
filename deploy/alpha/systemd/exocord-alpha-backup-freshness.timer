@@ -1,0 +1,11 @@
+[Unit]
+Description=Check Exocord alpha backups every six hours
+
+[Timer]
+OnBootSec=10m
+OnUnitActiveSec=6h
+Persistent=true
+Unit=exocord-alpha-backup-freshness.service
+
+[Install]
+WantedBy=timers.target

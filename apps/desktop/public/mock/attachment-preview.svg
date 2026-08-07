@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Liquid glass preview fixture</title>
+  <desc id="desc">A local deterministic image used to exercise the Exocord attachment viewer.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#161c22"/>
+      <stop offset="0.48" stop-color="#2a2550"/>
+      <stop offset="1" stop-color="#0d464a"/>
+    </linearGradient>
+    <linearGradient id="orb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f9fbff" stop-opacity="0.88"/>
+      <stop offset="0.42" stop-color="#96e9db" stop-opacity="0.64"/>
+      <stop offset="1" stop-color="#7769ff" stop-opacity="0.82"/>
+    </linearGradient>
+    <filter id="blur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="44"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="800" rx="48" fill="url(#background)"/>
+  <circle cx="230" cy="166" r="180" fill="#65d5c2" fill-opacity="0.24" filter="url(#blur)"/>
+  <circle cx="1004" cy="620" r="220" fill="#8b7cff" fill-opacity="0.28" filter="url(#blur)"/>
+  <rect x="112" y="106" width="976" height="588" rx="36" fill="#ffffff" fill-opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+  <circle cx="605" cy="342" r="154" fill="url(#orb)" fill-opacity="0.9"/>
+  <circle cx="552" cy="292" r="54" fill="#ffffff" fill-opacity="0.35"/>
+  <path d="M300 584c112-92 244-108 396-48s242 50 300-8" fill="none" stroke="#b8fff1" stroke-opacity="0.7" stroke-width="6" stroke-linecap="round"/>
+  <text x="160" y="186" fill="#f5fbff" fill-opacity="0.92" font-family="Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="2">EXOCORD / PREVIEW</text>
+  <text x="160" y="642" fill="#e2e9ef" fill-opacity="0.78" font-family="Arial, sans-serif" font-size="22" letter-spacing="1">local attachment fixture · safe to inspect</text>
+</svg>

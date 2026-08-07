@@ -1,0 +1,86 @@
+/*
+ * Exocord shell tokens — same family as Exo (ui/src/tweaks.css + tokens.css).
+ *
+ * Pure AMOLED canvas. Quiet surfaces. Hairline borders. Geist.
+ * Mint is status / brand accent only — never whole chrome.
+ */
+
+:root {
+  /* Exo @theme */
+  --background: #000000;
+  --surface: #0c0c0c;
+  --elevated: #141414;
+  --hover: #1c1c1c;
+  --line: #222222;
+  --line-soft: #161616;
+
+  --text: #f2f2f2;
+  --secondary: #8a8a8a;
+  --muted: #555555;
+  --muted-strong: #8a8a8a;
+
+  /* Legacy aliases used across styles.css */
+  --panel: #0c0c0c;
+  --panel-raised: #141414;
+  --panel-hover: rgba(255, 255, 255, 0.028);
+  --panel-active: rgba(255, 255, 255, 0.06);
+  --surface-solid: #0c0c0c;
+  --surface-raised: #141414;
+  --surface-highlight: rgba(255, 255, 255, 0.05);
+
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --outline: rgba(255, 255, 255, 0.22);
+  --exo-hairline: rgba(255, 255, 255, 0.07);
+
+  /* Primary fill = ink white (Exo Apply / Update pills) */
+  --accent: #f2f2f2;
+  --accent-soft: rgba(255, 255, 255, 0.1);
+  --fg: #f2f2f2;
+  --bg: #000000;
+
+  /* Brand mint — selected rails / online / good only */
+  --brand: #3dd68c;
+  --brand-strong: #2fb87a;
+  --brand-soft: rgba(61, 214, 140, 0.14);
+  --brand-softer: rgba(61, 214, 140, 0.08);
+  --brand-muted: #5ed9a3;
+  --focus: rgba(255, 255, 255, 0.8);
+  --workspace-tint: #3dd68c;
+
+  --surface-glass: rgba(12, 12, 12, 0.72);
+  --surface-glass-strong: rgba(20, 20, 20, 0.82);
+  --shadow-surface: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --scrim: rgba(0, 0, 0, 0.72);
+
+  --danger: #ff5c5c;
+  --warning: #ffb020;
+  --success: #3dd68c;
+  --online: #3dd68c;
+  --away: #ffb020;
+  --offline: #555555;
+  --close-hover: #c0303c;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius-1: 8px;
+  --radius-2: 12px;
+  --radius-3: 14px;
+  --radius-ui: 14px;
+  --radius-pill: 999px;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --spring: cubic-bezier(0.34, 1.32, 0.36, 1);
+
+  color: var(--text);
+  background: var(--background);
+  font-family: "Geist Variable", "Geist", "Segoe UI Variable Text", system-ui, sans-serif;
+  font-size: 13px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}

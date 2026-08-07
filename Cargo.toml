@@ -1,0 +1,93 @@
+[workspace]
+resolver = "2"
+members = [
+  "apps/exo-monolith",
+  "apps/desktop/src-tauri",
+  "crates/exo-client",
+  "crates/exo-crypto",
+  "crates/exo-discord",
+  "crates/exo-domain",
+  "crates/exo-id",
+  "crates/exo-protocol",
+  "crates/exo-safety",
+]
+
+[workspace.package]
+edition = "2024"
+license = "AGPL-3.0-or-later"
+rust-version = "1.88"
+version = "0.1.13"
+
+[workspace.dependencies]
+anyhow = "1.0"
+aho-corasick = "1.1"
+argon2 = "0.5.3"
+async-trait = "0.1"
+axum = { version = "0.8", features = ["macros", "ws"] }
+bitflags = { version = "2.9", features = ["serde"] }
+bytes = "1.10"
+base64 = "0.22"
+chrono = { version = "0.4", features = ["serde"] }
+futures-util = "0.3"
+getrandom = "0.3"
+hmac = "0.12"
+hex = "0.4"
+imagesize = "0.14"
+infer = "0.19"
+jsonwebtoken = { version = "10.4", default-features = false, features = ["aws_lc_rs", "use_pem"] }
+keyring = "4.1"
+livekit-api = "0.5.6"
+openmls = { version = "0.8.1", features = ["openmls_rust_crypto"] }
+openmls_basic_credential = { version = "0.5.0", features = ["clonable"] }
+openmls_rust_crypto = "0.5.1"
+openmls_traits = "0.5.0"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+regex = "1.13"
+rusqlite = { version = "0.32", features = ["bundled-sqlcipher-vendored-openssl"] }
+sqlx = { version = "0.8.6", default-features = false, features = ["chrono", "migrate", "postgres", "runtime-tokio-rustls", "uuid"] }
+sha2 = "0.10"
+subtle = "2.6"
+rmp-serde = "1.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tokio = { version = "1.47", features = ["macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
+tokio-tungstenite = { version = "0.29", features = ["rustls-tls-webpki-roots"] }
+tower-http = { version = "0.6", features = ["cors", "request-id", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+uuid = { version = "1.17", features = ["serde", "v4", "v7"] }
+url = "2.5"
+unicode-normalization = "0.1"
+unicode-properties = { version = "0.1.4", default-features = false, features = ["emoji"] }
+unicode-segmentation = "1.13"
+zstd = "0.13"
+chacha20poly1305 = "0.10"
+zeroize = "1.8"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+opt-level = 3
+panic = "abort"
+strip = "symbols"
+
+[patch.crates-io]
+# OpenMLS 0.8.1 still pins hpke-rs 0.6.1 to vulnerable libcrux
+# transitive crates even when Exocord selects the RustCrypto provider.
+# This narrow fork keeps the 0.6.1 API, updates SHA3, and removes the
+# unused optional libcrux provider so those crates cannot enter the lockfile.
+hpke-rs = { path = "vendor/hpke-rs" }
+jsonwebtoken = { path = "vendor/jsonwebtoken" }
+# Exocord is PostgreSQL-only and does not use SQLx's compile-time macros.
+# The upstream facade's unused optional MySQL graph leaves an unfixed RSA
+# advisory in Cargo.lock, so this narrow facade keeps only the core and
+# PostgreSQL re-exports that the server actually builds.
+sqlx = { path = "vendor/sqlx" }

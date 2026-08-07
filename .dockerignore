@@ -1,0 +1,12 @@
+target
+node_modules
+artifacts
+outputs
+work
+.exocord
+.git
+.env
+deploy/alpha/.env
+deploy/alpha/backups
+deploy/alpha/secrets
+**/*.log

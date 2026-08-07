@@ -1,0 +1,161 @@
+name: exocord-alpha
+
+x-logging: &default-logging
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  postgres:
+    image: postgres:17.10-alpine3.23
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-exocord}
+      POSTGRES_USER: ${POSTGRES_USER:-exocord}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-password
+    secrets:
+      - postgres-password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - backend
+    shm_size: 256mb
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\"",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+    logging: *default-logging
+
+  api:
+    image: exocord-api:${EXOCORD_IMAGE_TAG:?set a unique EXOCORD_IMAGE_TAG}
+    build:
+      context: ../..
+      dockerfile: deploy/alpha/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      EXOCORD_ENV: production
+      EXOCORD_BIND: 0.0.0.0:4100
+      EXOCORD_PUBLIC_API_URL: https://${EXOCORD_DOMAIN:?set EXOCORD_DOMAIN}
+      EXOCORD_TRUST_PROXY_HEADERS: "1"
+      EXOCORD_ALLOWED_ORIGINS: ${EXOCORD_ALLOWED_ORIGINS:-http://tauri.localhost}
+      EXOCORD_STATE_DIR: /var/lib/exocord
+      EXOCORD_LOG: ${EXOCORD_LOG:-info,exo_monolith=info}
+      EXOCORD_OPERATOR_NAME: ${EXOCORD_OPERATOR_NAME:?set EXOCORD_OPERATOR_NAME}
+      EXOCORD_PRIVACY_URL: ${EXOCORD_PRIVACY_URL:?set EXOCORD_PRIVACY_URL}
+      EXOCORD_TERMS_URL: ${EXOCORD_TERMS_URL:-}
+      EXOCORD_SUPPORT_EMAIL: ${EXOCORD_SUPPORT_EMAIL:?set EXOCORD_SUPPORT_EMAIL}
+      EXOCORD_ABUSE_EMAIL: ${EXOCORD_ABUSE_EMAIL:?set EXOCORD_ABUSE_EMAIL}
+      EXOCORD_OPERATOR_TOKEN_FILE: /run/secrets/operator-token
+      EXOCORD_DATABASE_HOST: postgres
+      EXOCORD_DATABASE_PORT: "5432"
+      EXOCORD_DATABASE_USER: ${POSTGRES_USER:-exocord}
+      EXOCORD_DATABASE_NAME: ${POSTGRES_DB:-exocord}
+      EXOCORD_DATABASE_PASSWORD_FILE: /run/secrets/postgres-password
+      EXOCORD_DATABASE_MAX_CONNECTIONS: ${EXOCORD_DATABASE_MAX_CONNECTIONS:-20}
+      EXOCORD_ATTACHMENT_STORAGE: local
+      EXOCORD_ATTACHMENT_MAX_STORAGE_BYTES: ${EXOCORD_ATTACHMENT_MAX_STORAGE_BYTES:-5368709120}
+      EXOCORD_ATTACHMENT_CAPABILITY_KEY_FILE: /run/secrets/attachment-capability-key
+      EXOCORD_ATTACHMENT_OBJECT_KEY_FILE: /run/secrets/attachment-object-key
+      EXOCORD_FRANKING_KEY_FILE: /run/secrets/franking-key
+      EXOCORD_LIVEKIT_URL: ${EXOCORD_LIVEKIT_URL:?set EXOCORD_LIVEKIT_URL}
+      EXOCORD_LIVEKIT_API_KEY_FILE: /run/secrets/livekit-api-key
+      EXOCORD_LIVEKIT_API_SECRET_FILE: /run/secrets/livekit-api-secret
+    secrets:
+      - postgres-password
+      - attachment-capability-key
+      - attachment-object-key
+      - franking-key
+      - operator-token
+      - livekit-api-key
+      - livekit-api-secret
+    volumes:
+      - api-state:/var/lib/exocord
+    networks:
+      - backend
+      - edge
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:4100/ready"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+    logging: *default-logging
+
+  caddy:
+    image: caddy:2.11.4-alpine
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      EXOCORD_DOMAIN: ${EXOCORD_DOMAIN:?set EXOCORD_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./releases:/srv/downloads:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - edge
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+    security_opt:
+      - no-new-privileges:true
+    logging: *default-logging
+
+volumes:
+  postgres-data:
+    name: exocord-alpha-postgres-data
+  api-state:
+    name: exocord-alpha-api-state
+  caddy-data:
+    name: exocord-alpha-caddy-data
+  caddy-config:
+    name: exocord-alpha-caddy-config
+
+networks:
+  backend:
+    internal: true
+  edge:
+
+secrets:
+  postgres-password:
+    file: ./secrets/postgres-password
+  attachment-capability-key:
+    file: ./secrets/attachment-capability-key
+  attachment-object-key:
+    file: ./secrets/attachment-object-key
+  franking-key:
+    file: ./secrets/franking-key
+  operator-token:
+    file: ./secrets/operator-token
+  livekit-api-key:
+    file: ./secrets/livekit-api-key
+  livekit-api-secret:
+    file: ./secrets/livekit-api-secret

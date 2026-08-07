@@ -1,0 +1,49 @@
+[package]
+name = "exo-monolith"
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+argon2.workspace = true
+axum.workspace = true
+base64.workspace = true
+chacha20poly1305.workspace = true
+chrono.workspace = true
+exo-discord = { path = "../../crates/exo-discord" }
+exo-crypto = { path = "../../crates/exo-crypto" }
+exo-domain = { path = "../../crates/exo-domain" }
+exo-protocol = { path = "../../crates/exo-protocol" }
+exo-safety = { path = "../../crates/exo-safety" }
+futures-util.workspace = true
+getrandom.workspace = true
+hmac.workspace = true
+hex.workspace = true
+imagesize.workspace = true
+infer.workspace = true
+jsonwebtoken.workspace = true
+livekit-api.workspace = true
+reqwest.workspace = true
+rusqlite.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+sqlx.workspace = true
+subtle.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tower-http.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+unicode-properties.workspace = true
+unicode-segmentation.workspace = true
+uuid.workspace = true
+url.workspace = true
+
+[dev-dependencies]
+exo-client = { path = "../../crates/exo-client" }
+pg-embed = { version = "1.0", default-features = false, features = ["rt_tokio"] }
+tempfile = "3.20"
+tower = { version = "0.5", features = ["util"] }

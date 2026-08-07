@@ -1,0 +1,18 @@
+services:
+  api:
+    environment:
+      EXOCORD_APPLE_CLIENT_ID: ${EXOCORD_APPLE_CLIENT_ID:?set EXOCORD_APPLE_CLIENT_ID}
+      EXOCORD_APPLE_TEAM_ID: ${EXOCORD_APPLE_TEAM_ID:?set EXOCORD_APPLE_TEAM_ID}
+      EXOCORD_APPLE_KEY_ID: ${EXOCORD_APPLE_KEY_ID:?set EXOCORD_APPLE_KEY_ID}
+      EXOCORD_APPLE_PRIVATE_KEY_FILE: /run/secrets/apple-private-key.p8
+      EXOCORD_APPLE_REDIRECT_URI: https://${EXOCORD_DOMAIN}/v1/auth/apple/callback
+      EXOCORD_PROVIDER_TOKEN_KEY_FILE: /run/secrets/provider-token-key
+    secrets:
+      - apple-private-key
+      - provider-token-key
+
+secrets:
+  apple-private-key:
+    file: ./secrets/apple-private-key.p8
+  provider-token-key:
+    file: ./secrets/provider-token-key

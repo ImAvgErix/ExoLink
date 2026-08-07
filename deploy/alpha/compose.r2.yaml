@@ -1,0 +1,18 @@
+services:
+  api:
+    environment:
+      EXOCORD_ATTACHMENT_STORAGE: r2
+      EXOCORD_R2_ENDPOINT: ${EXOCORD_R2_ENDPOINT:?set EXOCORD_R2_ENDPOINT}
+      EXOCORD_R2_BUCKET: ${EXOCORD_R2_BUCKET:?set EXOCORD_R2_BUCKET}
+      EXOCORD_R2_ACCESS_KEY_ID_FILE: /run/secrets/r2-access-key-id
+      EXOCORD_R2_SECRET_ACCESS_KEY_FILE: /run/secrets/r2-secret-access-key
+      EXOCORD_CDN_URL: ${EXOCORD_CDN_URL:?set EXOCORD_CDN_URL}
+    secrets:
+      - r2-access-key-id
+      - r2-secret-access-key
+
+secrets:
+  r2-access-key-id:
+    file: ./secrets/r2-access-key-id
+  r2-secret-access-key:
+    file: ./secrets/r2-secret-access-key

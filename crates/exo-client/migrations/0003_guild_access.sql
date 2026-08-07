@@ -1,0 +1,2 @@
+ALTER TABLE guilds
+  ADD COLUMN current_permissions INTEGER NOT NULL DEFAULT 0;
