@@ -1,6 +1,6 @@
 # Exocord
 
-**Built quiet. Tuned sharp.**
+**Presence without weight.**
 
 Native **desktop chat** for servers, DMs, and voice. Rust core, Tauri shell, React UI. Talks to a Postgres-backed server you can run yourself. Local cache and MLS state stay on the device — pure AMOLED black with a mint accent.
 
@@ -95,4 +95,4 @@ Client (Tauri + React)  ↔  Rust host  ↔  API / gateway  ↔  Postgres + Live
 
 MIT © 2026 Erix ([ImAvgErix](https://github.com/ImAvgErix)) — [LICENSE](LICENSE) · [PRIVACY.md](PRIVACY.md) · [SECURITY.md](SECURITY.md)
 
-<p align="center"><sub>Built quiet. Tuned sharp.</sub></p>
+<p align="center"><sub>Presence without weight.</sub></p>
