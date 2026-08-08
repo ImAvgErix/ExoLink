@@ -317,7 +317,14 @@ export class VoiceClient {
   async setMuted(muted: boolean): Promise<void> {
     const generation = this.joinGeneration;
     return this.queueMediaMutation(generation, async () => {
-      if (this.snapshot.status !== "connected") return;
+      if (this.snapshot.status !== "connected") {
+        throw new Error(
+          this.snapshot.status === "connecting" ||
+            this.snapshot.status === "reconnecting"
+            ? "Voice is still connecting — try mute again in a moment."
+            : "Join a voice room before changing your microphone.",
+        );
+      }
       if (this.snapshot.deafened) {
         throw new Error("Undeafen before changing your microphone.");
       }
@@ -345,7 +352,14 @@ export class VoiceClient {
   async setDeafened(deafened: boolean): Promise<void> {
     const generation = this.joinGeneration;
     return this.queueMediaMutation(generation, async () => {
-      if (this.snapshot.status !== "connected") return;
+      if (this.snapshot.status !== "connected") {
+        throw new Error(
+          this.snapshot.status === "connecting" ||
+            this.snapshot.status === "reconnecting"
+            ? "Voice is still connecting — try deafen again in a moment."
+            : "Join a voice room before changing deafen.",
+        );
+      }
       if (this.preview) {
         if (deafened) {
           this.preDeafenMicrophone = !this.snapshot.muted;
@@ -385,7 +399,14 @@ export class VoiceClient {
   async setScreenSharing(sharing: boolean): Promise<void> {
     const generation = this.joinGeneration;
     return this.queueMediaMutation(generation, async () => {
-      if (this.snapshot.status !== "connected") return;
+      if (this.snapshot.status !== "connected") {
+        throw new Error(
+          this.snapshot.status === "connecting" ||
+            this.snapshot.status === "reconnecting"
+            ? "Voice is still connecting — try screen share again in a moment."
+            : "Join a voice room before sharing your screen.",
+        );
+      }
       if (!this.snapshot.canStream && sharing) {
         throw new Error("You do not have permission to share your screen here.");
       }

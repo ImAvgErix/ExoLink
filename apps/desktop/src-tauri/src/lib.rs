@@ -41,7 +41,7 @@ use exo_id::SnowflakeGenerator;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use tauri::{
-    AppHandle, Emitter, Manager, State, WindowEvent,
+    AppHandle, Emitter, Manager, State, WebviewUrl, WebviewWindowBuilder, WindowEvent,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
 };
@@ -7157,6 +7157,47 @@ pub fn run() -> Result<(), tauri::Error> {
             }
         })
         .setup(|app| {
+            // Build the main window in code so Windows WebView2 can receive
+            // optional CDP browser args (env WEBVIEW2_* is ignored when wry
+            // supplies additionalBrowserArguments). Set EXOLINK_CDP=1 or a port.
+            let mut main_window = WebviewWindowBuilder::new(
+                app,
+                MAIN_WINDOW_LABEL,
+                WebviewUrl::App("index.html".into()),
+            )
+            .title("Exo Link")
+            .inner_size(1400.0, 860.0)
+            .min_inner_size(780.0, 560.0)
+            .center()
+            .decorations(false)
+            .resizable(true)
+            .visible(true)
+            .background_color(tauri::window::Color(0, 0, 0, 255));
+
+            #[cfg(windows)]
+            {
+                // Keep wry defaults; append remote debugging only when requested.
+                let mut browser_args = String::from(
+                    "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --autoplay-policy=no-user-gesture-required",
+                );
+                if let Ok(value) = std::env::var("EXOLINK_CDP") {
+                    let port = if value == "1" || value.eq_ignore_ascii_case("true") {
+                        "9223".to_owned()
+                    } else if value.chars().all(|c| c.is_ascii_digit()) {
+                        value
+                    } else {
+                        "9223".to_owned()
+                    };
+                    browser_args.push_str(&format!(
+                        " --remote-debugging-port={port} --remote-allow-origins=*"
+                    ));
+                    tracing::info!(%port, "Exo Link CDP debugging enabled via EXOLINK_CDP");
+                }
+                main_window = main_window.additional_browser_args(&browser_args);
+            }
+
+            main_window.build()?;
+
             let show_item = MenuItem::with_id(app, "show", "Show Exo Link", true, None::<&str>)?;
             let quit_item = MenuItem::with_id(app, "quit", "Quit Exo Link", true, None::<&str>)?;
             let tray_menu = Menu::with_items(app, &[&show_item, &quit_item])?;

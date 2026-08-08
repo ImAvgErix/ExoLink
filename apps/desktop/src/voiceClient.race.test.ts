@@ -235,6 +235,13 @@ describe("real voice connection state machine", () => {
     expect(client.current().error).toMatch(/end-to-end encryption key/i);
   });
 
+  it("surfaces an error when mute is toggled outside a connected room", async () => {
+    const client = new VoiceClient();
+    await expect(client.setMuted(true)).rejects.toThrow(
+      /Join a voice room before changing your microphone/,
+    );
+  });
+
   it("reconnects an active room when MLS rotates the SFrame key", async () => {
     fake.Room.rooms.length = 0;
     const client = new VoiceClient();

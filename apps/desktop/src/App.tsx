@@ -2879,6 +2879,7 @@ function VoicePanel({
             className={session.muted ? "control-active" : ""}
             type="button"
             aria-label="Toggle microphone"
+            aria-pressed={session.muted}
             disabled={!connected || !session.canSpeak}
             onClick={onToggleMute}
           >

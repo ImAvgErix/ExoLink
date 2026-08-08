@@ -13,20 +13,7 @@
     "security": {
       "csp": "default-src 'self'; base-uri 'none'; object-src 'none'; frame-src 'none'; script-src 'self'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data: blob: https: http://127.0.0.1:* http://localhost:*; media-src 'self' blob: https: http://127.0.0.1:* http://localhost:*; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:* http://localhost:* https://api-193-122-221-77.sslip.io ws://127.0.0.1:7880 wss://voice-129-153-173-234.sslip.io"
     },
-    "windows": [
-      {
-        "title": "Exo Link",
-        "width": 1400,
-        "height": 860,
-        "minWidth": 780,
-        "minHeight": 560,
-        "center": true,
-        "decorations": false,
-        "resizable": true,
-        "transparent": false,
-        "backgroundColor": "#000000"
-      }
-    ]
+    "windows": []
   },
   "bundle": {
     "active": true,
