@@ -421,12 +421,54 @@ export class VoiceClient {
         return;
       }
       const room = this.requireRoom();
-      await room.localParticipant.setScreenShareEnabled(sharing, {
-        audio: true,
-        contentHint: "detail",
-      });
+      try {
+        const shareAttempt = room.localParticipant.setScreenShareEnabled(
+          sharing,
+          {
+            audio: true,
+            contentHint: "detail",
+          },
+        );
+        // OS picker can stall indefinitely when dismissed oddly; bound wait so
+        // the UI never looks like a silent dead control.
+        const timed = await Promise.race([
+          shareAttempt.then(() => "ok" as const),
+          new Promise<"timeout">((resolve) => {
+            window.setTimeout(() => resolve("timeout"), 12_000);
+          }),
+        ]);
+        if (timed === "timeout") {
+          await room.localParticipant
+            .setScreenShareEnabled(false)
+            .catch(() => undefined);
+          throw new Error(
+            "Screen share timed out — pick a window or cancel and try again.",
+          );
+        }
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          error.message.startsWith("Screen share timed out")
+        ) {
+          throw error;
+        }
+        throw new Error(
+          mediaError(
+            error,
+            sharing
+              ? "Screen share was cancelled or blocked by the system."
+              : "Screen share could not be stopped.",
+          ),
+        );
+      }
       if (generation === this.joinGeneration && room === this.room) {
-        this.refresh({ sharing: room.localParticipant.isScreenShareEnabled });
+        const nowSharing = room.localParticipant.isScreenShareEnabled;
+        this.refresh({ sharing: nowSharing });
+        if (sharing && !nowSharing) {
+          throw new Error(
+            "Screen share was cancelled or blocked by the system.",
+          );
+        }
       }
     });
   }

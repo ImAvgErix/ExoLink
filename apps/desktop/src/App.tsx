@@ -49,6 +49,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import {
   type FormEvent,
   type KeyboardEvent,
+  useCallback,
   useEffect,
   useMemo,
   useReducer,
@@ -61,6 +62,11 @@ import {
   connectionBannerShowsRetry,
 } from "./connectionStatus";
 import { coreBridge } from "./coreBridge";
+import {
+  readPushToTalkEnabled,
+  reducePushToTalk,
+  writePushToTalkEnabled,
+} from "./pushToTalk";
 import {
   FirstRunSetup,
   isFirstRunSetupComplete,
@@ -6330,6 +6336,7 @@ function SettingsDialog({
   notificationMode,
   notificationBusy,
   refractiveGlassMode,
+  pushToTalkEnabled,
   cacheProtection,
   email,
   passwordAvailable,
@@ -6340,6 +6347,7 @@ function SettingsDialog({
   onMinimizeToTrayChange,
   onNotificationModeChange,
   onRefractiveGlassModeChange,
+  onPushToTalkChange,
   onClose,
   onLogout,
   onChangePassword,
@@ -6356,12 +6364,14 @@ function SettingsDialog({
   notificationMode: NotificationMode;
   notificationBusy: boolean;
   refractiveGlassMode: RefractiveGlassMode;
+  pushToTalkEnabled: boolean;
   cacheProtection: BootstrapViewModel["cacheProtection"];
   email: string | null;
   passwordAvailable: boolean;
   appleAvailable: boolean;
   signingOut: boolean;
   onCompactChange: (value: boolean) => void;
+  onPushToTalkChange: (value: boolean) => void;
   onUpdateProfile: (input: {
     handle: string;
     displayName: string;
@@ -7028,6 +7038,22 @@ function SettingsDialog({
             onChange={(event) =>
               void onMinimizeToTrayChange(event.target.checked)
             }
+          />
+          <i aria-hidden="true" />
+        </label>
+        <label className="setting-row setting-toggle">
+          <span>
+            <strong>Push to talk</strong>
+            <span>
+              Stay muted until you hold Space outside a text field. Blur,
+              deafen, and leave fail closed.
+            </span>
+          </span>
+          <input
+            type="checkbox"
+            checked={pushToTalkEnabled}
+            onChange={(event) => onPushToTalkChange(event.target.checked)}
+            aria-label="Enable push to talk"
           />
           <i aria-hidden="true" />
         </label>
@@ -8329,6 +8355,16 @@ export default function App() {
   const [notificationBusy, setNotificationBusy] = useState(false);
   const [minimizeToTray, setMinimizeToTray] = useState(true);
   const [windowSettingsBusy, setWindowSettingsBusy] = useState(false);
+  const [pushToTalkEnabled, setPushToTalkEnabled] = useState(() =>
+    readPushToTalkEnabled(),
+  );
+  const [pushToTalkHolding, setPushToTalkHolding] = useState(false);
+  const pushToTalkHoldingRef = useRef(false);
+  const pushToTalkEnabledRef = useRef(pushToTalkEnabled);
+  const voiceSessionRef = useRef(voiceSession);
+  pushToTalkEnabledRef.current = pushToTalkEnabled;
+  pushToTalkHoldingRef.current = pushToTalkHolding;
+  voiceSessionRef.current = voiceSession;
   const [actionError, setActionError] = useState<string | null>(null);
   const [availableUpdate, setAvailableUpdate] =
     useState<UpdateManifest | null>(null);
@@ -8503,6 +8539,136 @@ export default function App() {
       }),
     [],
   );
+
+  const applyPushToTalkDecision = useCallback(
+    (decision: ReturnType<typeof reducePushToTalk>["decision"]) => {
+      if (decision.action === "none") return;
+      const mute =
+        decision.action === "force_mute" || decision.action === "release"
+          ? true
+          : false; // hold → unmute
+      void voiceClient.setMuted(mute).catch((error: unknown) => {
+        setActionError(
+          error instanceof Error
+            ? error.message
+            : "Push-to-talk could not change the microphone.",
+        );
+      });
+    },
+    [],
+  );
+
+  const changePushToTalk = useCallback(
+    (enabled: boolean) => {
+      writePushToTalkEnabled(enabled);
+      setPushToTalkEnabled(enabled);
+      const next = reducePushToTalk(
+        {
+          enabled: pushToTalkEnabledRef.current,
+          holding: pushToTalkHoldingRef.current,
+          voiceConnected: voiceSessionRef.current.status === "connected",
+          deafened: voiceSessionRef.current.deafened,
+        },
+        { type: "preference", enabled },
+      );
+      setPushToTalkHolding(next.holding);
+      pushToTalkHoldingRef.current = next.holding;
+      applyPushToTalkDecision(next.decision);
+    },
+    [applyPushToTalkDecision],
+  );
+
+  useEffect(() => {
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.repeat) return;
+      const next = reducePushToTalk(
+        {
+          enabled: pushToTalkEnabledRef.current,
+          holding: pushToTalkHoldingRef.current,
+          voiceConnected: voiceSessionRef.current.status === "connected",
+          deafened: voiceSessionRef.current.deafened,
+        },
+        {
+          type: "keydown",
+          key: event.key,
+          target: event.target,
+        },
+      );
+      if (next.decision.action === "none" && next.holding === pushToTalkHoldingRef.current) {
+        return;
+      }
+      if (next.decision.action === "hold") {
+        event.preventDefault();
+      }
+      setPushToTalkHolding(next.holding);
+      pushToTalkHoldingRef.current = next.holding;
+      applyPushToTalkDecision(next.decision);
+    };
+    const onKeyUp = (event: globalThis.KeyboardEvent) => {
+      const next = reducePushToTalk(
+        {
+          enabled: pushToTalkEnabledRef.current,
+          holding: pushToTalkHoldingRef.current,
+          voiceConnected: voiceSessionRef.current.status === "connected",
+          deafened: voiceSessionRef.current.deafened,
+        },
+        {
+          type: "keyup",
+          key: event.key,
+          target: event.target,
+        },
+      );
+      if (next.decision.action === "none" && !next.holding) return;
+      setPushToTalkHolding(next.holding);
+      pushToTalkHoldingRef.current = next.holding;
+      applyPushToTalkDecision(next.decision);
+    };
+    const onBlur = () => {
+      const next = reducePushToTalk(
+        {
+          enabled: pushToTalkEnabledRef.current,
+          holding: pushToTalkHoldingRef.current,
+          voiceConnected: voiceSessionRef.current.status === "connected",
+          deafened: voiceSessionRef.current.deafened,
+        },
+        { type: "blur" },
+      );
+      setPushToTalkHolding(next.holding);
+      pushToTalkHoldingRef.current = next.holding;
+      applyPushToTalkDecision(next.decision);
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    window.addEventListener("keyup", onKeyUp, true);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown, true);
+      window.removeEventListener("keyup", onKeyUp, true);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, [applyPushToTalkDecision]);
+
+  // Fail closed when deafened while holding PTT, or when leaving voice.
+  useEffect(() => {
+    if (!pushToTalkEnabledRef.current) return;
+    if (voiceSession.deafened && pushToTalkHoldingRef.current) {
+      const next = reducePushToTalk(
+        {
+          enabled: true,
+          holding: true,
+          voiceConnected: voiceSession.status === "connected",
+          deafened: true,
+        },
+        { type: "deafen", deafened: true },
+      );
+      setPushToTalkHolding(next.holding);
+      pushToTalkHoldingRef.current = next.holding;
+      applyPushToTalkDecision(next.decision);
+    }
+    if (voiceSession.status === "idle" && pushToTalkHoldingRef.current) {
+      setPushToTalkHolding(false);
+      pushToTalkHoldingRef.current = false;
+    }
+  }, [voiceSession.deafened, voiceSession.status, applyPushToTalkDecision]);
 
   useEffect(() => {
     const preload = () => {
@@ -8966,7 +9132,9 @@ export default function App() {
     setActionError(null);
     try {
       const grant = await coreBridge.createVoiceGrant(voiceRoomId);
-      await voiceClient.join(grant, { startMuted: false });
+      await voiceClient.join(grant, {
+        startMuted: pushToTalkEnabledRef.current,
+      });
       if (activeWorkspaceId && activeChannelId) {
         await coreBridge.setActiveContext({
           workspaceId: activeWorkspaceId,
@@ -9872,6 +10040,12 @@ export default function App() {
           session={voiceSession}
           onCollapse={() => setVoiceCollapsed((value) => !value)}
           onToggleMute={() => {
+            if (pushToTalkEnabled) {
+              setActionError(
+                "Push to talk is on — hold Space to transmit, or turn PTT off in Appearance & notifications.",
+              );
+              return;
+            }
             void voiceClient
               .setMuted(!voiceSession.muted)
               .catch((error: unknown) =>
@@ -10093,12 +10267,14 @@ export default function App() {
         notificationMode={notificationMode}
         notificationBusy={notificationBusy}
         refractiveGlassMode={refractiveGlassMode}
+        pushToTalkEnabled={pushToTalkEnabled}
         cacheProtection={model.cacheProtection}
         email={auth?.email ?? null}
         passwordAvailable={auth?.passwordAvailable ?? false}
         appleAvailable={auth?.appleAvailable ?? false}
         signingOut={signingOut}
         onCompactChange={setCompact}
+        onPushToTalkChange={changePushToTalk}
         onUpdateProfile={async (input) => {
           adoptModel(await coreBridge.updateProfile(input));
         }}
