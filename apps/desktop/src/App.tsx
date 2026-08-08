@@ -903,7 +903,7 @@ function AuthScreen({
               </div>
               {network.managed ? (
                 <span className="auth-network-hint">
-                  This installation is managed by EXOCORD_API_URL.
+                  This installation is managed by the Exo Link API URL.
                 </span>
               ) : null}
             </div>
