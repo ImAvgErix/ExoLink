@@ -28,27 +28,59 @@ if (Test-Path -LiteralPath (Join-Path $exocordPerlBin 'perl.exe')) {
   $env:PERL5LIB = "$exocordMsysToolchains/msys-perl/usr/lib/perl5/core_perl`:$exocordMsysToolchains/msys-perl/usr/share/perl5/core_perl"
   $env:MSYS2_ENV_CONV_EXCL = 'PERL5LIB'
 }
+# Prefer Strawberry Perl for OpenSSL vendor builds (Git perl is incomplete).
+$strawberryPerl = 'C:\Strawberry\perl\bin\perl.exe'
+if (Test-Path -LiteralPath $strawberryPerl) {
+  $env:OPENSSL_SRC_PERL = $strawberryPerl
+}
 $exocordGit = Get-Command git.exe -ErrorAction SilentlyContinue
 if ($exocordGit) {
   $exocordGitRoot = Split-Path -Parent (Split-Path -Parent $exocordGit.Source)
   $exocordGitUsrBin = Join-Path $exocordGitRoot 'usr\bin'
   if (Test-Path -LiteralPath (Join-Path $exocordGitUsrBin 'touch.exe')) {
     $exocordNativeTools += $exocordGitUsrBin
-    $exocordGitPerl = Join-Path $exocordGitUsrBin 'perl.exe'
-    if (Test-Path -LiteralPath $exocordGitPerl) {
-      $env:OPENSSL_SRC_PERL = $exocordGitPerl
-    }
+    # Do not set OPENSSL_SRC_PERL to Git perl — it lacks modules needed by openssl-src.
   }
 }
 if (-not $env:OPENSSL_SRC_PERL -and (Test-Path -LiteralPath (Join-Path $exocordPerlBin 'perl.exe'))) {
   $exocordNativeTools += $exocordPerlBin
   $env:OPENSSL_SRC_PERL = Join-Path $exocordPerlBin 'perl.exe'
 }
-$env:PATH = "$($exocordNativeTools -join ';');$env:PATH"
-$env:CC = 'gcc'
-$env:AR = 'ar'
-if (-not $env:MAKEFLAGS) {
-  $env:MAKEFLAGS = "-j$([Environment]::ProcessorCount)"
+# MSVC first so rustc windows-msvc never picks Git/mingw link.exe or ar.
+$exocordMsvcBin = $null
+$vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+if (Test-Path -LiteralPath $vswhere) {
+  $vsInstall = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath 2>$null
+  if ($vsInstall) {
+    $candidate = Get-ChildItem (Join-Path $vsInstall 'VC\Tools\MSVC\*\bin\Hostx64\x64') -Directory -ErrorAction SilentlyContinue |
+      Select-Object -First 1 -ExpandProperty FullName
+    if ($candidate) { $exocordMsvcBin = $candidate }
+  }
+}
+$exocordPathPrefix = @($exocordNativeTools)
+if ($exocordMsvcBin) {
+  $exocordPathPrefix = @($exocordMsvcBin) + $exocordPathPrefix
+}
+$env:PATH = "$($exocordPathPrefix -join ';');$env:PATH"
+# Do not force mingw CC/AR when building with the MSVC rustc target (breaks link.exe).
+if ($env:CARGO_BUILD_TARGET -match 'gnu' -or $env:EXOCORD_FORCE_MINGW -eq '1') {
+  $env:CC = 'gcc'
+  $env:AR = 'ar'
+} else {
+  Remove-Item Env:CC -ErrorAction SilentlyContinue
+  if ($exocordMsvcBin -and (Test-Path (Join-Path $exocordMsvcBin 'lib.exe'))) {
+    $env:AR = Join-Path $exocordMsvcBin 'lib.exe'
+  } else {
+    Remove-Item Env:AR -ErrorAction SilentlyContinue
+  }
+}
+# nmake (OpenSSL vendor build on MSVC) does not accept GNU -j flags.
+if ($env:CARGO_BUILD_TARGET -match 'gnu' -or $env:EXOCORD_FORCE_MINGW -eq '1') {
+  if (-not $env:MAKEFLAGS) {
+    $env:MAKEFLAGS = "-j$([Environment]::ProcessorCount)"
+  }
+} else {
+  Remove-Item Env:MAKEFLAGS -ErrorAction SilentlyContinue
 }
 
 if ($TauriArgs.Count -eq 0) {
