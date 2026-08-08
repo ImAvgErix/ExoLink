@@ -48,7 +48,7 @@ impl CredentialVault {
             Ok(secret) => Ok(Some(secret)),
             Err(Error::NoEntry) => Ok(None),
             Err(error) => Err(format!(
-                "the saved Exocord session could not be read from the credential vault: {error}"
+                "the saved Exo Link session could not be read from the credential vault: {error}"
             )),
         }
     }
@@ -56,14 +56,14 @@ impl CredentialVault {
     pub fn save(&self, refresh_token: &str) -> Result<(), String> {
         self.session
             .set_password(refresh_token)
-            .map_err(|error| format!("the Exocord session could not be secured: {error}"))
+            .map_err(|error| format!("the Exo Link session could not be secured: {error}"))
     }
 
     pub fn clear(&self) -> Result<(), String> {
         match self.session.delete_credential() {
             Ok(()) | Err(Error::NoEntry) => Ok(()),
             Err(error) => Err(format!(
-                "the saved Exocord session could not be removed: {error}"
+                "the saved Exo Link session could not be removed: {error}"
             )),
         }
     }

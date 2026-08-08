@@ -220,10 +220,10 @@ export function FirstRunSetup({
   };
 
   return (
-    <main className="setup-screen" aria-label="Exocord setup">
+    <main className="setup-screen" aria-label="Exo Link setup">
       <header className="setup-titlebar">
         <div className="setup-titlebar-brand">
-          <strong>Exocord</strong>
+          <strong>Exo Link</strong>
           <span>
             Setup · {stepIndex + 1}/{STEPS.length} · {STEP_LABEL[step]}
           </span>
@@ -239,7 +239,7 @@ export function FirstRunSetup({
         <section className="setup-stage" key={step}>
           {step === "welcome" ? (
             <>
-              <p className="setup-kicker">Exocord</p>
+              <p className="setup-kicker">Exo Link</p>
               <h1>Finish setup</h1>
               <p className="setup-lead">
                 A few quiet steps — name, microphone, notifications. Same shell
@@ -456,7 +456,7 @@ export function FirstRunSetup({
               <p className="setup-kicker">Done</p>
               <h1>You&apos;re ready</h1>
               <p className="setup-lead">
-                Open Exocord for servers, DMs, and voice. Revisit these in
+                Open Exo Link for servers, DMs, and voice. Revisit these in
                 Settings anytime.
               </p>
               <div className="setup-card-stack">
@@ -639,7 +639,7 @@ export function FirstRunSetup({
 
           {step === "ready" ? (
             <button className="setup-primary exo-press" type="button" onClick={finish}>
-              Open Exocord
+              Open Exo Link
             </button>
           ) : null}
         </div>

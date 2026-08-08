@@ -122,10 +122,9 @@ function cloneBootstrap(): BootstrapViewModel {
       reason,
       title: titles[reason],
       message:
-        "Exocord stopped before synchronization and left every local cache file untouched.",
+        "Exo Link stopped before synchronization and left every local cache file untouched.",
       detail: "Preview: authenticated SQLCipher page verification failed.",
-      cachePath:
-        "C:\\Users\\Erix\\AppData\\Roaming\\app.exocord.desktop\\client.sqlite3",
+      cachePath: "%APPDATA%\\app.exocord.desktop\\client.sqlite3",
       canReset:
         reason !== "vault_unavailable" &&
         reason !== "encryption_unavailable" &&
@@ -232,7 +231,7 @@ export const coreBridge = {
           ? "not_configured"
           : "livekit_sframe_mls_exporter",
         operator: {
-          name: loopback ? "Local Exocord development" : "Exocord Test Alpha",
+          name: loopback ? "Local Exo Link development" : "Exo Link Test Alpha",
           privacyUrl: loopback
             ? null
             : "https://alpha.example.com/privacy",
@@ -253,7 +252,7 @@ export const coreBridge = {
         await this.networkConfiguration()
       ).apiUrl.startsWith("http://");
       return {
-        name: loopback ? "Local Exocord development" : "Exocord Test Alpha",
+        name: loopback ? "Local Exo Link development" : "Exo Link Test Alpha",
         privacyUrl: loopback ? null : "https://alpha.example.com/privacy",
         termsUrl: loopback ? null : "https://alpha.example.com/terms",
         supportEmail: loopback ? null : "help@alpha.example.com",
@@ -330,11 +329,11 @@ export const coreBridge = {
         cipherSuite: "MLS 1.0 · X25519 · AES-128-GCM · Ed25519",
         noKeyBackup: false,
         historyNotice:
-          "Sign in after reinstalling to restore account data and client-encrypted direct-message history. Exocord never receives the recovery key or archived plaintext.",
+          "Sign in after reinstalling to restore account data and client-encrypted direct-message history. Exo Link never receives the recovery key or archived plaintext.",
         devices: [
           {
             deviceId: "01953d73-79b0-7e80-8a24-a50bbf31e4ad",
-            name: "Exocord Desktop",
+            name: "Exo Link Desktop",
             fingerprint: "ARCTIC FABLE LUMEN RIVER QUARTZ NOVA",
             current: true,
             revoked: false,
@@ -658,7 +657,7 @@ export const coreBridge = {
   async exportAccountData(): Promise<string> {
     if (!isTauri()) {
       await new Promise((resolve) => window.setTimeout(resolve, 500));
-      return "C:\\Users\\Erix\\Downloads\\Exocord-data-export-preview.json";
+      return "ExoLink-data-export-preview.json";
     }
     return invoke<string>("export_account_data");
   },

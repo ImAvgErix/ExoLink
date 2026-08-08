@@ -38,7 +38,7 @@ export type VoiceJoinOptions = {
 type ActiveVoiceConnection = {
   generation: number;
   room: Room;
-  worker: Worker;
+  worker: Worker | null;
   e2eeKey: string | null;
 };
 
@@ -134,16 +134,15 @@ export class VoiceClient {
     try {
       const { ExternalE2EEKeyProvider, Room } = await this.loadLiveKit();
       if (generation !== this.joinGeneration) return;
-      if (!grant.endToEndEncrypted || !grant.e2eeKey) {
+      // Fail closed only when the grant promises E2EE but omits a key.
+      // Transport-only grants (LiveKit WSS, no SFrame) must still connect so
+      // mute/deafen/PTT/screen-share remain usable against alpha backends.
+      if (grant.endToEndEncrypted && !grant.e2eeKey) {
         throw new Error(
           "Voice refused to connect because an end-to-end encryption key is unavailable.",
         );
       }
-      const keyProvider = new ExternalE2EEKeyProvider();
-      await keyProvider.setKey(decodeBase64Url(grant.e2eeKey));
-      if (generation !== this.joinGeneration) return;
-      worker = new E2EEWorker();
-      room = new Room({
+      const roomOptions: ConstructorParameters<typeof Room>[0] = {
         adaptiveStream: true,
         dynacast: true,
         disconnectOnPageLeave: true,
@@ -152,13 +151,20 @@ export class VoiceClient {
           echoCancellation: true,
           noiseSuppression: true,
         },
-        encryption: {
+      };
+      if (grant.endToEndEncrypted && grant.e2eeKey) {
+        const keyProvider = new ExternalE2EEKeyProvider();
+        await keyProvider.setKey(decodeBase64Url(grant.e2eeKey));
+        if (generation !== this.joinGeneration) return;
+        worker = new E2EEWorker();
+        roomOptions.encryption = {
           keyProvider,
           worker,
-        },
-      });
+        };
+      }
+      room = new Room(roomOptions);
       if (generation !== this.joinGeneration) {
-        worker.terminate();
+        worker?.terminate();
         return;
       }
       this.room = room;
@@ -166,7 +172,7 @@ export class VoiceClient {
         generation,
         room,
         worker,
-        e2eeKey: grant.e2eeKey ?? null,
+        e2eeKey: grant.endToEndEncrypted ? grant.e2eeKey ?? null : null,
       };
       this.bindRoom(room, generation);
       await room.connect(grant.serverUrl, grant.token, {
@@ -197,7 +203,7 @@ export class VoiceClient {
       }
       if (generation !== this.joinGeneration || this.room !== room) {
         await room.disconnect(true).catch(() => undefined);
-        worker.terminate();
+        worker?.terminate();
         return;
       }
       if (resumeScreenShare) {
@@ -519,7 +525,7 @@ export class VoiceClient {
       .on(RoomEvent.Disconnected, () => {
         current(() => {
           this.detachAllMedia();
-          this.activeConnection?.worker.terminate();
+          this.activeConnection?.worker?.terminate();
           this.activeConnection = null;
           this.room = null;
           this.update({
@@ -706,7 +712,7 @@ export class VoiceClient {
       await room.disconnect(true);
     } finally {
       this.detachAllMedia();
-      connection?.worker.terminate();
+      connection?.worker?.terminate();
     }
   }
 }

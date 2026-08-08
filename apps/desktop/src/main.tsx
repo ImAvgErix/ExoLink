@@ -28,7 +28,7 @@ class RendererErrorBoundary extends Component<
   }
 
   componentDidCatch(error: unknown, info: ErrorInfo) {
-    console.error("Exocord renderer failed", error, info.componentStack);
+    console.error("Exo Link renderer failed", error, info.componentStack);
   }
 
   render() {
@@ -36,7 +36,7 @@ class RendererErrorBoundary extends Component<
       return (
         <main className="renderer-failure">
           <section role="alert">
-            <span>Exocord</span>
+            <span>Exo Link</span>
             <h1>The interface needs a reload.</h1>
             <p>{this.state.error}</p>
             <button type="button" onClick={() => window.location.reload()}>

@@ -30,15 +30,20 @@ Exo Link is **native desktop chat** for servers, DMs, and voice — speed and pr
 ## How you use it
 
 1. Download **ExoLink.exe** from [Releases](https://github.com/ImAvgErix/ExoLink/releases/latest)  
-2. Run the Windows installer → open from Start  
+2. Run the Windows installer → open **Exo Link** from the Start menu  
 3. Sign in or connect to your server  
 
-Windows 10/11 x64. Alpha builds may ask for an API URL once.
+Windows 10/11 x64 with WebView2. Alpha builds may ask for an API URL once. Installers are unsigned; SmartScreen may warn.
+
+<p align="center">
+  <img src="docs/media/setup-welcome.png" alt="Exo Link setup" width="460" />
+  &nbsp;
+  <img src="docs/media/messages.png" alt="Exo Link messages" width="460" />
+</p>
 
 ## Privacy
 
 See [PRIVACY.md](PRIVACY.md).
-
 
 ## Family
 
@@ -50,6 +55,7 @@ See [PRIVACY.md](PRIVACY.md).
 | **[Exo Launcher](https://github.com/ImAvgErix/ExoLauncher)** | Game library |
 
 ---
+
 ## License
 
 MIT © 2026 Erix ([ImAvgErix](https://github.com/ImAvgErix))

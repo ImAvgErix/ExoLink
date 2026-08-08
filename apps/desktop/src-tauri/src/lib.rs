@@ -530,10 +530,10 @@ fn ensure_alpha_server_compatible(probe: &ServerProbe, secure: bool) -> Result<(
         return Err("The server reports that it is not ready.".to_owned());
     }
     if !probe.password {
-        return Err("This server does not support Exocord password sign-in.".to_owned());
+        return Err("This server does not support Exo Link password sign-in.".to_owned());
     }
     if probe.conversation_actions != ALPHA_CONVERSATION_CAPABILITY {
-        return Err("This server is not compatible with this Exocord alpha build.".to_owned());
+        return Err("This server is not compatible with this Exo Link alpha build.".to_owned());
     }
     if secure && probe.storage != "postgres" {
         return Err("A remote alpha server must use durable PostgreSQL storage.".to_owned());
@@ -759,13 +759,13 @@ impl CacheRecoveryKind {
     const fn message(self) -> &'static str {
         match self {
             Self::VaultUnavailable => {
-                "Exocord cannot reach the operating-system credential vault. Your cache has not been changed."
+                "Exo Link cannot reach the operating-system credential vault. Your cache has not been changed."
             }
             Self::CacheKeyUnavailable => {
-                "The saved cache key is missing, malformed, or temporarily unreadable. Exocord will not guess or fall back to plaintext."
+                "The saved cache key is missing, malformed, or temporarily unreadable. Exo Link will not guess or fall back to plaintext."
             }
             Self::EncryptionUnavailable => {
-                "SQLCipher is unavailable in this desktop build. Reinstall a verified Exocord build before touching the cache."
+                "SQLCipher is unavailable in this desktop build. Reinstall a verified Exo Link build before touching the cache."
             }
             Self::CacheLocked => {
                 "The vault key does not unlock this database, or an authenticated page is damaged. The original files remain in place."
@@ -774,10 +774,10 @@ impl CacheRecoveryKind {
                 "SQLCipher opened the database, but its integrity check failed. The original files remain in place."
             }
             Self::MigrationFailed => {
-                "Exocord could not prove that the legacy-to-encrypted migration completed safely, so it stopped without replacing the cache."
+                "Exo Link could not prove that the legacy-to-encrypted migration completed safely, so it stopped without replacing the cache."
             }
             Self::StorageFailed => {
-                "A filesystem or database error prevented a safe open. Exocord stopped before starting synchronization."
+                "A filesystem or database error prevented a safe open. Exo Link stopped before starting synchronization."
             }
         }
     }
@@ -1658,7 +1658,7 @@ async fn install_available_update(
 ) -> Result<(), String> {
     let manifest = fetch_update_manifest(&state.network).await?;
     if !version_is_newer(&manifest.version, env!("CARGO_PKG_VERSION")) {
-        return Err("Exocord is already up to date".to_owned());
+        return Err("Exo Link is already up to date".to_owned());
     }
     let url = format!("{}/downloads/{}", state.network.api_url, manifest.filename);
     let response = reqwest::Client::new()
@@ -1696,7 +1696,7 @@ async fn install_available_update(
         .compare_exchange(false, true, AtomicOrdering::AcqRel, AtomicOrdering::Acquire)
         .is_err()
     {
-        return Err("an Exocord update is already being installed".to_owned());
+        return Err("an Exo Link update is already being installed".to_owned());
     }
 
     // Remove tray/window resources before handing control to NSIS. `/R` asks
@@ -1843,7 +1843,7 @@ async fn device_security_status(
         .into_iter()
         .map(|device| DeviceSecurityDevice {
             device_id: device.device_id.to_string(),
-            name: device.name.unwrap_or_else(|| "Exocord device".to_owned()),
+            name: device.name.unwrap_or_else(|| "Exo Link device".to_owned()),
             fingerprint: device.fingerprint,
             current: device.device_id.to_string() == state.device_id,
             revoked: device.revoked_at.is_some(),
@@ -1854,7 +1854,7 @@ async fn device_security_status(
     {
         devices.push(DeviceSecurityDevice {
             device_id: identity.device_id.to_string(),
-            name: "Exocord Desktop".to_owned(),
+            name: "Exo Link Desktop".to_owned(),
             fingerprint: identity.fingerprint.clone(),
             current: true,
             revoked: false,
@@ -1868,7 +1868,7 @@ async fn device_security_status(
         fingerprint: local_identity.map(|identity| identity.fingerprint),
         cipher_suite: "MLS 1.0 · X25519 · AES-128-GCM · Ed25519",
         no_key_backup: false,
-        history_notice: "Sign in after reinstalling to restore account data and client-encrypted direct-message history. Exocord never receives the recovery key or archived plaintext.",
+        history_notice: "Sign in after reinstalling to restore account data and client-encrypted direct-message history. Exo Link never receives the recovery key or archived plaintext.",
         devices,
         error: setup_error,
     })
@@ -2368,7 +2368,7 @@ async fn export_account_data(
     std::fs::create_dir_all(&directory)
         .map_err(|error| format!("the Downloads folder could not be created: {error}"))?;
     let filename = format!(
-        "Exocord-data-export-{}-{}.json",
+        "ExoLink-data-export-{}-{}.json",
         Utc::now().format("%Y-%m-%d-%H%M%S"),
         &Uuid::new_v4().simple().to_string()[..8]
     );
@@ -5242,7 +5242,7 @@ async fn ensure_e2ee_identity(core: &DesktopCore, user_id: u64) -> Result<(), Re
                 &core.device_id,
                 &RegisterDeviceIdentity {
                     signature_key: URL_SAFE_NO_PAD.encode(identity.signature_key),
-                    name: Some("Exocord Desktop".into()),
+                    name: Some("Exo Link Desktop".into()),
                 },
             )
             .await?;
@@ -7035,7 +7035,7 @@ fn should_minimize_to_tray(window_label: &str, minimize_to_tray: bool) -> bool {
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
-/// Starts the native Exocord shell.
+/// Starts the native Exo Link shell.
 ///
 /// # Errors
 ///
@@ -7157,16 +7157,16 @@ pub fn run() -> Result<(), tauri::Error> {
             }
         })
         .setup(|app| {
-            let show_item = MenuItem::with_id(app, "show", "Show Exocord", true, None::<&str>)?;
-            let quit_item = MenuItem::with_id(app, "quit", "Quit Exocord", true, None::<&str>)?;
+            let show_item = MenuItem::with_id(app, "show", "Show Exo Link", true, None::<&str>)?;
+            let quit_item = MenuItem::with_id(app, "quit", "Quit Exo Link", true, None::<&str>)?;
             let tray_menu = Menu::with_items(app, &[&show_item, &quit_item])?;
             let tray_icon = app
                 .default_window_icon()
                 .cloned()
-                .ok_or_else(|| std::io::Error::other("the Exocord tray icon is unavailable"))?;
+                .ok_or_else(|| std::io::Error::other("the Exo Link tray icon is unavailable"))?;
             TrayIconBuilder::with_id("main-tray")
                 .icon(tray_icon)
-                .tooltip("Exocord")
+                .tooltip("Exo Link")
                 .menu(&tray_menu)
                 .on_menu_event(|app, event| match event.id.as_ref() {
                     "show" => show_main_window(app),
@@ -7339,14 +7339,14 @@ mod tests {
     fn updater_rejects_unsafe_filenames_and_checksums() {
         let valid = UpdateManifest {
             version: "99.0.0".to_owned(),
-            filename: "Exocord-99.0.0-x64-setup.exe".to_owned(),
+            filename: "Exo Link-99.0.0-x64-setup.exe".to_owned(),
             sha256: "a".repeat(64),
             notes: "Test release".to_owned(),
         };
         assert!(validate_update_manifest(&valid).is_ok());
 
         let mut traversal = valid.clone();
-        traversal.filename = "../Exocord.exe".to_owned();
+        traversal.filename = "../Exo Link.exe".to_owned();
         assert!(validate_update_manifest(&traversal).is_err());
 
         let mut bad_checksum = valid;

@@ -44,8 +44,8 @@ export function notificationIntent({
 
   if (mode === "private") {
     return {
-      title: "New Exocord message",
-      body: "Open Exocord to view it.",
+      title: "New Exo Link message",
+      body: "Open Exo Link to view it.",
     };
   }
 
@@ -67,7 +67,7 @@ export function notificationIntent({
       ? "Direct message"
       : `${safeLabel(channel?.name, "a channel")} · ${safeLabel(
           workspace?.name,
-          "Exocord",
+          "Exo Link",
         )}`,
   };
 }

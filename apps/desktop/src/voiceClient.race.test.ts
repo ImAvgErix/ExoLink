@@ -196,6 +196,45 @@ describe("real voice connection state machine", () => {
     });
   });
 
+  it("joins transport-only grants without requiring an E2EE key", async () => {
+    fake.Room.rooms.length = 0;
+    const client = new VoiceClient();
+    await client.join(
+      grant("transport-only", "fast", {
+        endToEndEncrypted: false,
+        e2eeKey: null,
+      }),
+    );
+
+    expect(fake.Room.rooms).toHaveLength(1);
+    expect(client.current()).toMatchObject({
+      roomId: "transport-only",
+      status: "connected",
+      transportEncrypted: true,
+      endToEndEncrypted: false,
+      error: null,
+    });
+  });
+
+  it("fails closed when E2EE is required but the grant omits a key", async () => {
+    fake.Room.rooms.length = 0;
+    const client = new VoiceClient();
+    await expect(
+      client.join(
+        grant("e2ee-missing", "fast", {
+          endToEndEncrypted: true,
+          e2eeKey: null,
+        }),
+      ),
+    ).rejects.toThrow(/end-to-end encryption key is unavailable/);
+
+    expect(client.current()).toMatchObject({
+      status: "failed",
+      endToEndEncrypted: true,
+    });
+    expect(client.current().error).toMatch(/end-to-end encryption key/i);
+  });
+
   it("reconnects an active room when MLS rotates the SFrame key", async () => {
     fake.Room.rooms.length = 0;
     const client = new VoiceClient();

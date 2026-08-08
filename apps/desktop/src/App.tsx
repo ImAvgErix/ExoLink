@@ -56,6 +56,10 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import {
+  connectionBannerLabel,
+  connectionBannerShowsRetry,
+} from "./connectionStatus";
 import { coreBridge } from "./coreBridge";
 import {
   FirstRunSetup,
@@ -417,7 +421,7 @@ function AuthScreen({
       setNetworkError(
         probeError instanceof Error
           ? probeError.message
-          : "That Exocord server could not be reached.",
+          : "That Exo Link server could not be reached.",
       );
     } finally {
       setNetworkBusy(null);
@@ -435,7 +439,7 @@ function AuthScreen({
       setNetworkError(
         saveError instanceof Error
           ? saveError.message
-          : "That Exocord network could not be activated.",
+          : "That Exo Link network could not be activated.",
       );
     } finally {
       setNetworkBusy(null);
@@ -525,16 +529,16 @@ function AuthScreen({
         className="auth-card"
         aria-labelledby="auth-title"
       >
-        <div className="auth-wordmark" aria-label="Exocord">
+        <div className="auth-wordmark" aria-label="Exo Link">
         <span className="auth-mark">
             <Sparkles size={16} />
         </span>
-          <strong>Exocord</strong>
+          <strong>Exo Link</strong>
         </div>
         <div className="auth-card-heading">
           <h1 id="auth-title">
             {setupRequired
-              ? "Connect to Exocord"
+              ? "Connect to Exo Link"
               : authMode === "register"
                 ? "Create account"
                 : authMode === "recover"
@@ -817,7 +821,7 @@ function AuthScreen({
               <p>
                 {setupRequired
                   ? "Ask the alpha owner for the exact HTTPS address. Every friend in the group uses the same one."
-                  : "Your test group shares one Exocord server. Enter its URL once; session secrets remain in the Windows credential vault."}
+                  : "Your test group shares one Exo Link server. Enter its URL once; session secrets remain in the Windows credential vault."}
               </p>
               <label htmlFor="alpha-network-url">Server URL</label>
               <div className="auth-network-input">
@@ -967,16 +971,16 @@ function RecoveryCodesScreen({
         className="auth-card recovery-codes-card"
         aria-labelledby="recovery-codes-title"
       >
-        <div className="auth-wordmark" aria-label="Exocord">
+        <div className="auth-wordmark" aria-label="Exo Link">
           <span className="auth-mark">
             <Sparkles size={16} />
           </span>
-          <strong>Exocord</strong>
+          <strong>Exo Link</strong>
         </div>
         <div className="auth-card-heading">
           <h1 id="recovery-codes-title">Save your recovery codes</h1>
           <p>
-            Each code resets your password once. Exocord stores only their
+            Each code resets your password once. Exo Link stores only their
             hashes, so nobody can show these exact codes again.
           </p>
         </div>
@@ -1263,7 +1267,7 @@ function DeletionPendingScreen({
             {error}
           </p>
         ) : null}
-        <footer>{auth.email ?? "Authenticated Exocord account"}</footer>
+        <footer>{auth.email ?? "Authenticated Exo Link account"}</footer>
       </section>
     </main>
   );
@@ -1278,17 +1282,8 @@ function ConnectionBanner({
   pending: number;
   onRetry: () => void;
 }) {
-  if (state === "connected" && pending === 0) return null;
-  const label =
-    state === "offline"
-      ? pending > 0
-        ? `Offline — ${pending} message${pending === 1 ? "" : "s"} safely queued`
-        : "Offline — local channels remain available"
-      : state === "catching_up"
-        ? "Catching up and delivering queued messages…"
-        : state === "connecting"
-          ? "Connecting to your Exocord network…"
-          : `Delivering ${pending} queued message${pending === 1 ? "" : "s"}…`;
+  const label = connectionBannerLabel(state, pending);
+  if (label === null) return null;
   return (
     <div
       className={`connection-banner connection-${state}`}
@@ -1301,7 +1296,7 @@ function ConnectionBanner({
         <LoaderCircle className="connection-spinner" size={12} />
       )}
       <span>{label}</span>
-      {state === "offline" || (state === "connected" && pending > 0) ? (
+      {connectionBannerShowsRetry(state, pending) ? (
         <button type="button" onClick={onRetry}>
           <RefreshCw size={11} /> Retry
         </button>
@@ -1520,7 +1515,7 @@ function TopNavigation({
         }`}
         type="button"
         title="Switch space"
-        aria-label={`Switch from ${workspace?.name ?? "Exocord"}`}
+        aria-label={`Switch from ${workspace?.name ?? "Exo Link"}`}
         aria-expanded={openMenu === "workspace"}
         onClick={(event) => {
           event.stopPropagation();
@@ -1529,7 +1524,7 @@ function TopNavigation({
           );
         }}
       >
-        <strong>{workspace?.name ?? "Exocord"}</strong>
+        <strong>{workspace?.name ?? "Exo Link"}</strong>
         <ChevronDown size={13} />
       </button>
 
@@ -1750,7 +1745,7 @@ function TopNavigation({
               <span className="profile-fallback profile-fallback-large">EX</span>
             )}
             <span>
-              <strong>{currentUser?.name ?? "Exocord user"}</strong>
+              <strong>{currentUser?.name ?? "Exo Link user"}</strong>
               <small>@{currentUser?.handle ?? "account"}</small>
             </span>
             <i
@@ -5511,7 +5506,7 @@ function AuditLogPanel({
         const actorName =
           entry.actorId === currentUserId
             ? "You"
-            : actor?.name ?? (entry.actorId ? "Former member" : "Exocord");
+            : actor?.name ?? (entry.actorId ? "Former member" : "Exo Link");
         return (
           <article key={entry.id}>
             <span className="audit-icon">
@@ -6199,7 +6194,7 @@ function AvatarOriginalLightbox({
             </a>
             <a
               href={member.avatarUrl}
-              download="exocord-avatar"
+              download="exolink-avatar"
               className="attachment-lightbox-action"
             >
               <Download size={15} />
@@ -6961,7 +6956,7 @@ function SettingsDialog({
             <label className="setting-row setting-choice">
               <span>
                 <strong>Surface style</strong>
-                <span>Choose whether Exocord uses the refractive glass layer.</span>
+                <span>Choose whether Exo Link uses the refractive glass layer.</span>
               </span>
               <select
                 aria-label="Glass appearance"
@@ -7019,7 +7014,7 @@ function SettingsDialog({
         </label>
         <label className="setting-row setting-toggle">
           <span>
-            <strong>Keep Exocord in the tray</strong>
+            <strong>Keep Exo Link in the tray</strong>
             <span>
               Closing the window hides it in Windows hidden icons. Use the tray
               menu to quit.
@@ -7183,7 +7178,7 @@ function SettingsDialog({
             <strong>Private history recovery</strong>
             <small>
               {security?.historyNotice ??
-                "Sign in after reinstalling to restore account data and client-encrypted direct-message history. Exocord never receives the recovery key or archived plaintext."}
+                "Sign in after reinstalling to restore account data and client-encrypted direct-message history. Exo Link never receives the recovery key or archived plaintext."}
             </small>
           </span>
         </div>
@@ -7201,7 +7196,7 @@ function SettingsDialog({
               <span>
                 <strong>{operatorInfo.name}</strong>
                 <small>
-                  This organization operates your selected Exocord alpha.
+                  This organization operates your selected Exo Link alpha.
                 </small>
               </span>
             </div>
@@ -7294,7 +7289,7 @@ function SettingsDialog({
               <strong>Sign-in methods</strong>
               <small>
                 Connections stay visible and removable. Apple never changes
-                your Exocord email or display name.
+                your Exo Link email or display name.
               </small>
             </span>
           </div>
@@ -7309,7 +7304,7 @@ function SettingsDialog({
                     ? authMethods.appleEmail ??
                       "Connected with a private Apple identity."
                     : !appleAvailable
-                      ? "Not configured by this Exocord operator."
+                      ? "Not configured by this Exo Link operator."
                     : authMethods
                       ? authMethods.passwordSet
                         ? "Connect it as an additional way to sign in."
@@ -8199,7 +8194,7 @@ function CacheRecoveryScreen({
           </p>
         ) : null}
         <footer>
-          Nothing has been deleted. Exocord will not open this cache as
+          Nothing has been deleted. Exo Link will not open this cache as
           plaintext.
         </footer>
       </section>
@@ -8217,10 +8212,10 @@ function UpdatePrompt({
   const [installing, setInstalling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   return (
-    <aside className="update-prompt" role="status" aria-label="Exocord update available">
+    <aside className="update-prompt" role="status" aria-label="Exo Link update available">
       <span className="update-prompt-icon"><Download size={17} /></span>
       <div>
-        <strong>Exocord {update.version}</strong>
+        <strong>Exo Link {update.version}</strong>
         <p>{update.notes.trim() || "A new alpha build is ready."}</p>
         {error ? <small>{error}</small> : null}
         <span>
@@ -8864,7 +8859,7 @@ export default function App() {
     try {
       if (mode !== "off" && !(await requestNotificationAccess())) {
         throw new Error(
-          "Windows blocked notifications. Allow Exocord in Windows notification settings, then try again.",
+          "Windows blocked notifications. Allow Exo Link in Windows notification settings, then try again.",
         );
       }
       const saved = await coreBridge.saveNotificationSettings(mode);
@@ -9407,7 +9402,7 @@ export default function App() {
     return (
       <main className="error-screen">
         <Sparkles size={20} />
-        <h1>Exocord could not start</h1>
+        <h1>Exo Link could not start</h1>
         <p>{fatalError}</p>
         <button type="button" onClick={() => window.location.reload()}>
           Try again

@@ -51,13 +51,13 @@ describe("privacy-safe Windows notification policy", () => {
   it("uses content-free copy by default", () => {
     const intent = decide("private");
     expect(intent).toEqual({
-      title: "New Exocord message",
-      body: "Open Exocord to view it.",
+      title: "New Exo Link message",
+      body: "Open Exo Link to view it.",
     });
     expect(JSON.stringify(intent)).not.toContain("must never reach");
   });
 
-  it("suppresses alerts while the Exocord window is focused", () => {
+  it("suppresses alerts while the Exo Link window is focused", () => {
     expect(decide("private", incoming(), true)).toBeNull();
   });
 

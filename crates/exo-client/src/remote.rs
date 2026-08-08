@@ -213,7 +213,7 @@ impl ApiClient {
                             "username": username,
                             "password": password,
                             "deviceId": device_id,
-                            "clientName": "Exocord Desktop",
+                            "clientName": "Exo Link Desktop",
                             "proofOfWork": proof,
                             "accountId": account_id.to_string(),
                             "wrappedKey": wrapped_key,
@@ -266,7 +266,7 @@ impl ApiClient {
                     "recoveryCode": recovery_code,
                     "newPassword": new_password,
                     "deviceId": device_id,
-                    "clientName": "Exocord Desktop · Recovery",
+                    "clientName": "Exo Link Desktop · Recovery",
                     "proofOfWork": proof
                 }))
                 .send()
@@ -320,7 +320,7 @@ impl ApiClient {
                             "recoveryCode": recovery_code,
                             "newPassword": new_password,
                             "deviceId": device_id,
-                            "clientName": "Exocord Desktop · Recovery",
+                            "clientName": "Exo Link Desktop · Recovery",
                             "proofOfWork": proof,
                             "accountId": account_id.to_string(),
                             "wrappedKey": wrapped_key,
@@ -362,7 +362,7 @@ impl ApiClient {
                     "email": email,
                     "password": password,
                     "deviceId": device_id,
-                    "clientName": "Exocord Desktop",
+                    "clientName": "Exo Link Desktop",
                     "proofOfWork": proof
                 }))
                 .send()
@@ -386,7 +386,7 @@ impl ApiClient {
                     "challengeId": challenge_id,
                     "code": code,
                     "deviceId": device_id,
-                    "clientName": "Exocord Desktop"
+                    "clientName": "Exo Link Desktop"
                 }))
                 .send()
                 .await?,
@@ -2180,7 +2180,7 @@ mod tests {
                 "/v1/meta/operator",
                 get(|| async {
                     Json(serde_json::json!({
-                        "name": "Exocord Test Alpha",
+                        "name": "Exo Link Test Alpha",
                         "privacyUrl": "https://alpha.example.test/privacy",
                         "termsUrl": null,
                         "supportEmail": "help@alpha.example.test",
@@ -2208,7 +2208,7 @@ mod tests {
             "replies_edits_deletes_unicode_reactions"
         );
         assert_eq!(probe.native_voice, "livekit_sframe_mls_exporter");
-        assert_eq!(probe.operator.name, "Exocord Test Alpha");
+        assert_eq!(probe.operator.name, "Exo Link Test Alpha");
         assert_eq!(
             probe.operator.privacy_url.as_deref(),
             Some("https://alpha.example.test/privacy")

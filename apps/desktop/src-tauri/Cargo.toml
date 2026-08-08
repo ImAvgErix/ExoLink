@@ -7,7 +7,7 @@ rust-version.workspace = true
 
 [lib]
 name = "exocord_desktop_lib"
-# Exocord currently targets desktop only. The staticlib/cdylib outputs from
+# Exo Link currently targets desktop only. The staticlib/cdylib outputs from
 # Tauri's mobile template overflow MinGW's auto-export table and are not used
 # by the Windows executable.
 crate-type = ["rlib"]
