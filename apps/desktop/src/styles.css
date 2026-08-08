@@ -8854,6 +8854,15 @@ kbd {
   color: #000;
 }
 
+.auth-mark-img {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
 .auth-card-heading h1 {
   margin: 0;
   font-size: 28px;

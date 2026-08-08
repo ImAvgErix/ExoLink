@@ -1,28 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="surface" x1="72" y1="48" x2="432" y2="464" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#17191f"/>
-      <stop offset="1" stop-color="#090a0d"/>
+      <stop stop-color="#14121c"/>
+      <stop offset="1" stop-color="#07060a"/>
     </linearGradient>
-    <linearGradient id="mark" x1="152" y1="128" x2="376" y2="384" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#d7d2ff"/>
-      <stop offset=".48" stop-color="#8b7cff"/>
+    <linearGradient id="link" x1="120" y1="180" x2="390" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b48cff"/>
+      <stop offset=".5" stop-color="#7d7dff"/>
       <stop offset="1" stop-color="#45dbc4"/>
     </linearGradient>
     <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="15" result="blur"/>
-      <feColorMatrix in="blur" values="1 0 0 0 0.55 0 1 0 0 0.48 0 0 1 0 1 0 0 0 .58 0"/>
+      <feGaussianBlur stdDeviation="14" result="blur"/>
       <feMerge>
-        <feMergeNode/>
+        <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
   <rect x="20" y="20" width="472" height="472" rx="132" fill="url(#surface)"/>
   <rect x="21" y="21" width="470" height="470" rx="131" fill="none" stroke="#ffffff" stroke-opacity=".1" stroke-width="2"/>
-  <g filter="url(#glow)" fill="url(#mark)">
-    <path d="M256 102c8 74 38 104 112 112-74 8-104 38-112 112-8-74-38-104-112-112 74-8 104-38 112-112Z"/>
-    <path d="M363 300c4 34 18 48 52 52-34 4-48 18-52 52-4-34-18-48-52-52 34-4 48-18 52-52Z" opacity=".88"/>
-    <circle cx="151" cy="337" r="17" opacity=".9"/>
+  <g filter="url(#glow)" fill="url(#link)" stroke="url(#link)">
+    <circle cx="168" cy="210" r="46"/>
+    <circle cx="344" cy="302" r="34"/>
+    <path d="M204 228c48 8 88 42 118 62" fill="none" stroke-width="28" stroke-linecap="round"/>
+    <circle cx="250" cy="168" r="6" opacity=".85"/>
+    <circle cx="278" cy="154" r="4" opacity=".7"/>
+    <circle cx="304" cy="150" r="3" opacity=".55"/>
   </g>
 </svg>

@@ -536,9 +536,7 @@ function AuthScreen({
         aria-labelledby="auth-title"
       >
         <div className="auth-wordmark" aria-label="Exo Link">
-        <span className="auth-mark">
-            <Sparkles size={16} />
-        </span>
+          <img className="auth-mark-img" src="/logo.png" alt="" width={22} height={22} draggable={false} />
           <strong>Exo Link</strong>
         </div>
         <div className="auth-card-heading">
@@ -978,9 +976,7 @@ function RecoveryCodesScreen({
         aria-labelledby="recovery-codes-title"
       >
         <div className="auth-wordmark" aria-label="Exo Link">
-          <span className="auth-mark">
-            <Sparkles size={16} />
-          </span>
+          <img className="auth-mark-img" src="/logo.png" alt="" width={22} height={22} draggable={false} />
           <strong>Exo Link</strong>
         </div>
         <div className="auth-card-heading">

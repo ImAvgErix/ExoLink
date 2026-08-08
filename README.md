@@ -1,5 +1,9 @@
 # Exo Link
 
+<p align="center">
+  <img src="docs/media/logo.png" alt="Exo Link" width="96" />
+</p>
+
 **Presence without weight.**
 
 Exo Link is **native desktop chat** for servers, DMs, and voice — speed and privacy without a browser tab farm. AMOLED dark. Calm chrome.
