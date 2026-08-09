@@ -529,16 +529,12 @@ function AuthScreen({
 
   return (
     <main className="auth-screen">
-      <WindowControls />
+      <ExoShellBar role="Chat & voice" />
       <section
         ref={authCardRef}
         className="auth-card"
         aria-labelledby="auth-title"
       >
-        <div className="auth-wordmark" aria-label="Exo Link">
-          <img className="auth-mark-img" src="/logo.png" alt="" width={22} height={22} draggable={false} />
-          <strong>Exo Link</strong>
-        </div>
         <div className="auth-card-heading">
           <h1 id="auth-title">
             {setupRequired
@@ -970,15 +966,11 @@ function RecoveryCodesScreen({
 
   return (
     <main className="auth-screen">
-      <WindowControls />
+      <ExoShellBar role="Chat & voice" />
       <section
         className="auth-card recovery-codes-card"
         aria-labelledby="recovery-codes-title"
       >
-        <div className="auth-wordmark" aria-label="Exo Link">
-          <img className="auth-mark-img" src="/logo.png" alt="" width={22} height={22} draggable={false} />
-          <strong>Exo Link</strong>
-        </div>
         <div className="auth-card-heading">
           <h1 id="recovery-codes-title">Save your recovery codes</h1>
           <p>
@@ -1343,34 +1335,65 @@ function presenceLabel(presence: Member["presence"]): string {
       : "Offline";
 }
 
+/** Company window cluster — same as Hub / Launcher / OS (min · max · close). */
 function WindowControls() {
   return (
-    <div className="window-controls">
+    <div className="exo-titlebar-actions window-controls">
       <button
-        className="window-control"
+        className="exo-winbtn"
         type="button"
         aria-label="Minimize"
+        title="Minimize"
         onClick={() => void coreBridge.windowAction("minimize")}
       >
-        <Minus size={14} strokeWidth={1.7} />
+        <Minus size={15} strokeWidth={1.75} />
       </button>
       <button
-        className="window-control"
+        className="exo-winbtn"
         type="button"
         aria-label="Maximize"
+        title="Maximize"
         onClick={() => void coreBridge.windowAction("toggle_maximize")}
       >
-        <Maximize2 size={12} strokeWidth={1.7} />
+        <Maximize2 size={14} strokeWidth={1.75} />
       </button>
       <button
-        className="window-control window-close"
+        className="exo-winbtn is-close"
         type="button"
         aria-label="Close"
+        title="Close"
         onClick={() => void coreBridge.windowAction("close")}
       >
-        <X size={14} strokeWidth={1.7} />
+        <X size={15} strokeWidth={1.75} />
       </button>
     </div>
+  );
+}
+
+/** Company title strip used on auth / first-run surfaces. */
+function ExoShellBar({
+  role = "Chat & voice",
+}: {
+  role?: string;
+}) {
+  return (
+    <header className="exo-titlebar exo-link-shellbar">
+      <div className="exo-brand">
+        <img
+          src="/logo.png"
+          alt=""
+          className="exo-brand-logo"
+          width={28}
+          height={28}
+          draggable={false}
+        />
+        <div className="exo-brand-text">
+          <span className="exo-brand-name">Exo Link</span>
+          <span className="exo-brand-role">{role}</span>
+        </div>
+      </div>
+      <WindowControls />
+    </header>
   );
 }
 
@@ -1460,7 +1483,7 @@ function TopNavigation({
     <GlassSurface
       as="header"
       variant="regular"
-      className={`top-navigation ${openMenu ? "is-menu-open" : ""}`}
+      className={`top-navigation exo-link-topnav ${openMenu ? "is-menu-open" : ""}`}
       data-tauri-drag-region
       onMouseDown={startWindowDrag}
       onDoubleClick={(event) => {
@@ -1479,6 +1502,23 @@ function TopNavigation({
           onClick={() => setOpenMenu(null)}
         />
       ) : null}
+
+      {/* Company brand lockup — same as Hub / Launcher / OS */}
+      <div className="exo-brand exo-link-brand" data-no-drag>
+        <img
+          src="/logo.png"
+          alt=""
+          className="exo-brand-logo"
+          width={28}
+          height={28}
+          draggable={false}
+        />
+        <div className="exo-brand-text">
+          <span className="exo-brand-name">Exo Link</span>
+          <span className="exo-brand-role">Chat & voice</span>
+        </div>
+      </div>
+      <div className="nav-divider" />
 
       <button
         className={`profile-identity ${

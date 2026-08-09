@@ -167,11 +167,11 @@ button:disabled {
   position: relative;
   z-index: 10;
   display: flex;
-  height: 58px;
+  height: 52px;
   min-width: 0;
   align-items: center;
-  border-bottom: 1px solid var(--border);
-  background: rgba(12, 13, 15, 0.95);
+  border-bottom: 1px solid #161616;
+  background: #000;
 }
 
 .brand-mark {
@@ -8888,19 +8888,30 @@ kbd {
   background: #000 !important;
 }
 
-/* Match ecosystem titlebar control strip */
-.window-controls .window-control {
-  width: 40px;
-  height: 52px;
-  color: #8a8a8a;
+/* Force company shell on Link surfaces */
+.exo-link-shellbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
 }
-.window-controls .window-control:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #f2f2f2;
+
+.auth-screen {
+  padding-top: 52px !important;
+  background: #000 !important;
 }
-.window-controls .window-control.is-close:hover {
-  background: #c0303c;
-  color: #fff;
+
+/* Kill legacy floating window-controls so only exo-winbtn remains */
+.auth-screen > .window-controls:not(.exo-titlebar-actions) {
+  display: none;
+}
+
+.window-controls.exo-titlebar-actions {
+  position: static;
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
 }
 
 .auth-card-heading h1 {
@@ -11503,19 +11514,9 @@ body {
   --motion-smooth: 220ms;
 }
 
+/* Pure AMOLED shell — same family as Hub / Launcher / OS (no purple/teal wash) */
 .app-shell {
-  background:
-    radial-gradient(
-      940px 430px at 76% 4%,
-      rgba(98, 82, 210, 0.12),
-      transparent 72%
-    ),
-    radial-gradient(
-      760px 360px at 18% 82%,
-      rgba(50, 124, 132, 0.075),
-      transparent 74%
-    ),
-    #000;
+  background: #000;
 }
 
 .conversation,
@@ -11523,14 +11524,22 @@ body {
   background: transparent;
 }
 
-.top-navigation {
-  height: 48px;
-  min-height: 48px;
-  gap: 3px;
-  background-color: rgba(20, 24, 28, 0.54);
-  transition:
-    background-color var(--motion-smooth) var(--motion-standard),
-    box-shadow var(--motion-smooth) var(--motion-standard);
+.top-navigation,
+.top-navigation.exo-link-topnav {
+  height: 52px !important;
+  min-height: 52px !important;
+  gap: 6px;
+  padding: 0 8px 0 12px;
+  border-bottom: 1px solid #161616 !important;
+  background: #000 !important;
+  background-color: #000 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+.exo-link-brand {
+  flex-shrink: 0;
+  padding-right: 4px;
 }
 
 .app-content,
@@ -11538,7 +11547,7 @@ body {
 .app-content.voice-collapsed,
 .app-content.has-voice-dock {
   position: relative;
-  height: calc(100% - 48px);
+  height: calc(100% - 52px);
   grid-template-columns: minmax(0, 1fr);
 }
 

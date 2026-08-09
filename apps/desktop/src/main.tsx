@@ -9,6 +9,7 @@ import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
 import App from "./App";
 import { LiquidGlassDefs } from "./LiquidGlass";
+import "./exo-shell.css";
 import "./tokens.css";
 import "./styles.css";
 
