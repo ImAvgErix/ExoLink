@@ -8826,10 +8826,30 @@ kbd {
   width: min(380px, 100%);
   max-height: calc(100vh - 72px);
   padding: 28px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-3);
-  background: var(--panel);
+  border: 1px solid var(--line-soft, #161616);
+  border-radius: 14px;
+  background: #0c0c0c;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.7);
+}
+
+/* Family CTA — white pill like Hub Apply / Launcher Play */
+.auth-form button[type="submit"],
+.auth-card .primary-button {
+  height: 44px;
+  border: none;
+  border-radius: 999px;
+  background: #f2f2f2 !important;
+  color: #0a0a0a !important;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow:
+    0 10px 32px rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+.auth-form button[type="submit"]:hover:not(:disabled),
+.auth-card .primary-button:hover:not(:disabled) {
+  background: #fff !important;
 }
 
 .auth-wordmark {
@@ -8860,7 +8880,27 @@ kbd {
   height: 28px;
   border-radius: 9px;
   object-fit: cover;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 1px #222;
+  background: #080808;
+}
+
+.auth-screen {
+  background: #000 !important;
+}
+
+/* Match ecosystem titlebar control strip */
+.window-controls .window-control {
+  width: 40px;
+  height: 52px;
+  color: #8a8a8a;
+}
+.window-controls .window-control:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f2f2f2;
+}
+.window-controls .window-control.is-close:hover {
+  background: #c0303c;
+  color: #fff;
 }
 
 .auth-card-heading h1 {

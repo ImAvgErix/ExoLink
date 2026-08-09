@@ -39,14 +39,17 @@
   --fg: #f2f2f2;
   --bg: #000000;
 
-  /* Brand mint — selected rails / online / good only */
-  --brand: #3dd68c;
-  --brand-strong: #2fb87a;
-  --brand-soft: rgba(61, 214, 140, 0.14);
-  --brand-softer: rgba(61, 214, 140, 0.08);
-  --brand-muted: #5ed9a3;
+  /*
+   * Primary brand = white ink (same as Hub / Launcher / OS pills).
+   * Mint is reserved for online / success only — not whole chrome.
+   */
+  --brand: #f2f2f2;
+  --brand-strong: #ffffff;
+  --brand-soft: rgba(255, 255, 255, 0.12);
+  --brand-softer: rgba(255, 255, 255, 0.06);
+  --brand-muted: #8a8a8a;
   --focus: rgba(255, 255, 255, 0.8);
-  --workspace-tint: #3dd68c;
+  --workspace-tint: #f2f2f2;
 
   --surface-glass: rgba(12, 12, 12, 0.72);
   --surface-glass-strong: rgba(20, 20, 20, 0.82);
